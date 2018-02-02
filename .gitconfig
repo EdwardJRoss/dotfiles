@@ -1,0 +1,23 @@
+[user]
+	name = Edward Ross
+	email = edward@skeptric.com
+[push]
+	default = current
+[alias]
+	a = add
+	b = branch
+	s = status
+	c = commit
+	l = log
+	pu = push -u
+	cob = checkout -b
+	blog = log master..HEAD
+	bl = log master..HEAD
+	biff = diff master...HEAD
+[core]
+	preloadindex = true
+	fscache = true
+[gc]
+	auto = 256
+[pull]
+	rebase = true

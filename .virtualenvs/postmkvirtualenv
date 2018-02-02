@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Setup general useful tools
+pip install jedi importmagic autopep8 yapf flake8 pylint jupyter

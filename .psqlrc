@@ -1,0 +1,19 @@
+\set ON_ERROR_ROLLBACK interactive
+\set COMP_KEYWORD_CASE upper
+\set HISTFILE ~/.psql_history- :DBNAME
+\set HISTCONTROL ignoredups
+
+-- Output
+\x auto
+\set VERBOSITY verbose
+\unset QUIET
+
+\timing on
+\pset numericlocale on
+
+
+-- http://www.postgresql.org/docs/9.3/static/app-psql.html#APP-PSQL-PROMPTING
+\set PROMPT1 '%[%033[1m%]%M %n@%/\n%R%[%033[0m%]%# '
+-- PROMPT2 is printed when the prompt expects more input, like when you type
+-- SELECT * FROM<enter>. %R shows what type of input it expects.
+\set PROMPT2 '%R> '

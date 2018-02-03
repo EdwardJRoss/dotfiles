@@ -958,7 +958,4 @@ Lisp function does not specify a special indentation."
 
   )
 
-
-;;; Aliases for eshell
-(defun eshell/config (&rest args)
-  (shell-command "git --git-dir=$HOME/.cfg/ --work-tree=$HOME" args))
+(eshell/alias "config" "git --git-dir=$HOME/.cfg/ --work-tree=$HOME $*")

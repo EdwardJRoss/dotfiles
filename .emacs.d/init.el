@@ -289,99 +289,23 @@
     "p" 'proced
     "m" 'compile)
 
-   ;; Set eww-browser
-   (:keymaps 'eww-mode-map
-    "p" 'eww-back-url
-    "P" 'eww-forward-url
-    "<" 'beginning-of-buffer
-    ">" 'end-of-buffer
-    "R" 'eww-reload
-    "TAB" 'shr-next-link
-    "<backtab>" 'shr-previous-link)
-
-   (:keymaps 'eww-link-keymap
-    "o" 'eww-follow-link
-    "O" 'eww-browse-with-external-browser
-    )
-
-   ;; Allow editing of text links
-   (:keymaps 'eww-text-map
-    "i" (lookup-key evil-normal-state-map "i")
-    "I" (lookup-key evil-normal-state-map "I")
-    "a" (lookup-key evil-normal-state-map "a")
-    "A" (lookup-key evil-normal-state-map "A")
-    )
-
-   (:keymaps 'help-mode-map
-    :states 'motion
-    "o" 'help-follow
-    "p" 'help-go-back
-    )
-
-   ;; TODO: f/l/r/L/T/d
-   (:keymaps 'Info-mode-map
-    :states 'motion
-    "a" 'Info-next
-    "J" 'Info-up
-    "." 'Info-menu
-    "o" 'Info-follow-nearest-node
-    "<SPC>" nil
-    )
-
-   (:keymaps 'dired-mode-map
-    :states 'motion
-    "o" 'dired-find-file
-    )
-
-   (:keymaps 'package-menu-mode-map
-    :states 'motion
-    "o" 'package-menu-describe-package
-    "R" 'package-menu-refresh
-    )
-
-   (:keymaps 'proced-mode-map
-    :states 'motion
-    "j" (lookup-key evil-motion-state-map "j")
-    "k" (lookup-key evil-motion-state-map "k")
-    "d" 'proced-send-signal ; was k
-    "c" 'proced-mark ; was k
-    "C" 'proced-mark-all ; was k
-    "r" 'revert-buffer ; was g
-    "S" 'proced-filter-interactive
-    "." 'proced-toggle-marks
-    "o" 'proced-filter-interactive
-    "TAB" 'proced-toggle-tree
-    )
-
-   ;; Alow insertion of marks and yanking in motion state
-   (:states 'motion
-    "m" (lookup-key evil-normal-state-map "m")
-    "y" (lookup-key evil-normal-state-map "y")
-    "Y" (lookup-key evil-normal-state-map "Y")
-    "\"" (lookup-key evil-normal-state-map "\""))
-
-   (:keymaps 'custom-mode-map
-    :states 'motion
-    "o" 'Custom-newline)
-
+  :init
+  (setq evil-want-integration nil)
    :config
+   ;; For evil-collection
   (evil-mode 1)
   (setq evil-ex-substitute-global t)
   (setq evil-shift-width 2)
   (setq evil-want-fine-undo t)
   (setq-default evil-symbol-word-search t)
   (setq evil-cross-lines t)
-
-  (evil-set-initial-state 'proced-mode 'motion)
-  (evil-set-initial-state 'Custom-mode 'motion)
-  (evil-set-initial-state 'eww-mode 'motion)
-  (evil-set-initial-state 'help-mode 'motion)
-  (evil-set-initial-state 'Info-mode 'motion)
-  (evil-set-initial-state 'dired-mode 'motion)
-  (evil-set-initial-state 'package-menu-mode 'motion)
-
-  (evil-set-initial-state 'term-mode 'emacs)
   )
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
 (use-package transpose-frame
   :general
@@ -524,6 +448,8 @@
   (global-flycheck-mode)
 
   :general
+  ;; TODO: Replace these with Vim unimpared
+  ;; https://github.com/tpope/vim-unimpaired
   (:states '(normal insert motion emacs visual)
    :prefix application-evil-prefix
    :global-prefix application-global-prefix

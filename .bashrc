@@ -47,12 +47,7 @@ else
     vi=vi
 fi
 
-if type -a emacs > /dev/null 2>&1; then
-    alias ec="emacsclient -n -c"
-    export VISUAL="emacsclient -nw"
-else
-    export VISUAL="vi"
-fi
+export VISUAL="vi"
 
 alias e="$VISUAL"
 alias py='python'

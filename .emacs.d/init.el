@@ -193,11 +193,6 @@
   :after general
   :general
   (:states '(normal visual motion)
-  "]" 'scroll-up-window
-  "[" 'scroll-down-window
-  "M-]" 'scroll-up-other-window
-  "M-[" 'scroll-down-other-window
-
   ; M acts like zz,zb,zt
   "M" 'recenter-top-bottom)
   (:states 'motion
@@ -231,10 +226,10 @@
    "<SPC>" 'evil-execute-in-god-state
    ";" 'evil-ex
 
-   "a" (eval `(general-simulate-keys ,application-global-prefix))
+   "a" (eval `(general-simulate-key ,application-global-prefix))
 
-   "c" (general-simulate-keys "C-c")
-   "x" (general-simulate-keys "C-x")
+   "c" (general-simulate-key "C-c")
+   "x" (general-simulate-key "C-x")
    "u" 'universal-argument
 
    "!" 'term

@@ -513,6 +513,8 @@
 
          )
   :config
+  (define-key org-mode-map (kbd "C-c C-.") 'org-time-stamp-inactive)
+
   ;; Refiling
   (setq org-agenda-files '("~/org/projects.org"))
   (setq org-default-notes-file "~/org/inbox.org")

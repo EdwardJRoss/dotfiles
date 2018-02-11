@@ -300,6 +300,8 @@
   :after evil
   :ensure t
   :config
+  ;; Don't let it steal org-mode tab bindings
+  (setq evil-collection-outline-bind-tab-p nil)
   (evil-collection-init))
 
 (use-package transpose-frame

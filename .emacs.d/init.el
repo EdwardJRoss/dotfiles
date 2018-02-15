@@ -901,3 +901,10 @@ Lisp function does not specify a special indentation."
     ("h" evil-scroll-left "left")
     ("j" evil-scroll-down "down")
     ("k" evil-scroll-up "up")))
+
+;; TODO: Buffer local?
+;; TODO: ESC escapes?
+(use-package caps-lock
+  :config
+  (global-set-key (kbd "C-c u") 'caps-lock-mode)
+  (evil-define-key 'normal 'global "zu" 'caps-lock-mode))

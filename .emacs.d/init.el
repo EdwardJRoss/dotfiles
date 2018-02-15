@@ -908,3 +908,17 @@ Lisp function does not specify a special indentation."
   :config
   (global-set-key (kbd "C-c u") 'caps-lock-mode)
   (evil-define-key 'normal 'global "zu" 'caps-lock-mode))
+
+
+;; TODO: Version snippets
+;; TODO: Local snippets
+(use-package yasnippet
+  :config
+  (defun yas--downcase-key (args) ; args = (table key)
+    (cl-callf downcase (nth 1 args))
+    args)
+
+  ;; Make snippet keys case insensitive
+  (advice-add 'yas--fetch :filter-args #'yas--downcase-key)
+
+  (yas-global-mode 1))

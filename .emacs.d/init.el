@@ -888,3 +888,16 @@ Lisp function does not specify a special indentation."
    )
 
   )
+
+
+
+(use-package hydra
+  :config
+    (defhydra hydra-zoom (evil-normal-state-map "z")
+    "zoom"
+    ("=" text-scale-increase "in")
+    ("-" text-scale-decrease "out")
+    ("l" evil-scroll-right "right")
+    ("h" evil-scroll-left "left")
+    ("j" evil-scroll-down "down")
+    ("k" evil-scroll-up "up")))

@@ -685,12 +685,25 @@ Lisp function does not specify a special indentation."
 
   (setq python-shell-interpreter "jupyter"
         python-shell-interpreter-args "console --simple-prompt")
-  )
 
-(use-package virtualenvwrapper
-  :config
-  (venv-initialize-interactive-shells)
-  (venv-initialize-eshell))
+
+
+  ;; Get virtualenv working in eshell
+  ;; Sourced from https://www.reddit.com/r/emacs/comments/5z0w5t/bash_dependency_eshell/
+  (with-eval-after-load 'eshell
+    (defvar eshell-path-env)
+    (dolist (hook '(pyvenv-post-activate-hooks pyvenv-post-deactivate-hooks))
+      (add-hook hook                  ; eshell
+                (lambda ()
+                  (let ((path-env (mapconcat (lambda (x) (or x "."))
+                                             exec-path
+                                             path-separator)))
+                    (setq-default eshell-path-env path-env)
+                    (dolist (buffer (buffer-list))
+                      (with-current-buffer buffer
+                        (and (derived-mode-p 'eshell-mode)
+                             (setq eshell-path-env path-env)))))))))
+  )
 
 (use-package py-autopep8
   :config

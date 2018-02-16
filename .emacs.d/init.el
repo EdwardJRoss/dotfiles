@@ -367,11 +367,6 @@
     :bind (("C-<RET>" . god-local-mode)))
 
 
-(use-package evil-matchit
-  :demand t
-  :config
-  (global-evil-matchit-mode 1))
-
 (use-package evil-exchange
   :demand t
   :config

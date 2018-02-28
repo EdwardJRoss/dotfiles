@@ -425,6 +425,9 @@
   :config
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
+  ;; Allow selection of text being entered
+  ;; otherwise can only select with C-M-j
+  (setq ivy-use-selectable-prompt t)
   (ivy-mode 1))
 
 ; TODO: Only load on extensions that can flycheck

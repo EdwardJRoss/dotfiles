@@ -287,7 +287,6 @@
   (evil-mode 1)
   (setq evil-ex-substitute-global t)
   (setq evil-shift-width 2)
-  (setq evil-want-fine-undo t)
   (setq-default evil-symbol-word-search t)
   (setq evil-cross-lines t)
   )

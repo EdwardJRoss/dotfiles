@@ -12,11 +12,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General configuration independent of packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Put/save customisations through customize in a separate file
-(defconst custom-file (expand-file-name "custom.el" user-emacs-directory))
-(unless (file-exists-p custom-file)
-  (write-region "" nil custom-file))
-(load custom-file)
+
 
 ;; Add custom lisp
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -930,3 +926,10 @@ Lisp function does not specify a special indentation."
   (advice-add 'yas--fetch :filter-args #'yas--downcase-key)
 
   (yas-global-mode 1))
+
+
+;; Put/save customisations through customize in a separate file
+(defconst custom-file (expand-file-name "custom.el" user-emacs-directory))
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file))
+(load custom-file)

@@ -652,6 +652,7 @@ Lisp function does not specify a special indentation."
 ;;; Version Control
 (if (not (eq system-type 'cygwin))
 (use-package evil-magit
+  :demand
   :after evil
   :general
   (:states '(normal insert motion emacs visual)

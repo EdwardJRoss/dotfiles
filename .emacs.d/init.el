@@ -716,6 +716,11 @@ Lisp function does not specify a special indentation."
   :config
   ;; There's a bug with flycheck lintr caching
   (setq flycheck-lintr-caching nil)
+  ;; ESS by default has a crazy indentation scheme where comments are indented
+  ;; based on the number of # signs, inherited from lisp.
+  ;; See https://stackoverflow.com/questions/780796/emacs-ess-mode-tabbing-for-comment-region
+  ;; Turn this off
+  (setq ess-fancy-comments nil)
   ;; ESS will not print the evaluated commands, also speeds up the evaluation
   (setq ess-eval-visibly nil)
   ;; Don't prompt for directory; use cwd

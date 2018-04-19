@@ -179,6 +179,20 @@
 
 (require 'skeptric-scroll)
 
+
+;; https://www.reddit.com/r/emacs/comments/1zkj2d/advanced_usage_of_eshell/
+(defun er/eshell-here ()
+  "Go to eshell and set current directory to the buffer's directory"
+  (interactive)
+  (let ((dir (file-name-directory (or (buffer-file-name)
+                                      default-directory))))
+    (eshell)
+    (eshell/pushd ".")
+    (cd dir)
+    (goto-char (point-max))
+    (eshell-kill-input)
+    (eshell-send-input)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Evil - Vi Emulation Layer for Emacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -280,7 +294,7 @@
    :prefix application-evil-prefix
    :global-prefix application-global-prefix
     "w" 'eww
-    "s" 'eshell
+    "s" 'er/eshell-here
     "S" 'shell
     "x" 'term
     "p" 'proced

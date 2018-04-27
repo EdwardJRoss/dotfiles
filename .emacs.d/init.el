@@ -730,18 +730,22 @@ Lisp function does not specify a special indentation."
   :config
   ;; There's a bug with flycheck lintr caching
   (setq flycheck-lintr-caching nil)
-  ;; ESS by default has a crazy indentation scheme where comments are indented
-  ;; based on the number of # signs, inherited from lisp.
-  ;; See https://stackoverflow.com/questions/780796/emacs-ess-mode-tabbing-for-comment-region
-  ;; Turn this off
-  (setq ess-fancy-comments nil)
   ;; ESS will not print the evaluated commands, also speeds up the evaluation
   (setq ess-eval-visibly nil)
   ;; Don't prompt for directory; use cwd
   (setq ess-ask-for-ess-directory nil)
   ;; Smart S assign is more annoying than helpful
   ;; Can't invoke it directly for some reason
-  (ess-toggle-underscore nil))
+  (ess-toggle-underscore nil)
+  ;; Need to put this in a hook or else ESS won't respect it
+  (defun my-ess-settings ()
+    ;; ESS by default has a crazy indentation scheme where comments are indented
+    ;; based on the number of # signs, inherited from lisp.
+    ;; See https://stackoverflow.com/questions/780796/emacs-ess-mode-tabbing-for-comment-region
+    ;; Turn this off
+    (setq ess-fancy-comments nil)
+    )
+  (add-hook 'ess-mode-hook #'my-ess-settings))
 
 (use-package polymode
   :mode

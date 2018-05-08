@@ -37,8 +37,23 @@
 (setq-default indicate-empty-lines t)
 
 ; keys used for "application" map
-(defconst application-evil-prefix "-")
-(defconst application-global-prefix "<f6>")
+(defvar er/application-evil-prefix-key (kbd "-"))
+(defvar er/application-prefix-key (kbd "<f6>"))
+
+
+;; My own place to keep application shortcuts
+(defalias 'er/application-prefix (make-sparse-keymap))
+(defvar er/application-map (symbol-function 'er/application-prefix)
+  "Keymap for application launching keys.")
+(define-key global-map er/application-prefix-key 'er/application-prefix)
+
+(defvar er/leader-evil-prefix-key (kbd "<SPC>"))
+(defvar er/leader-prefix-key (kbd "C-<SPC>"))
+
+(defalias 'er/leader-prefix (make-sparse-keymap))
+(defvar er/leader-map (symbol-function 'er/leader-prefix)
+  "Keymap for personal shortcusts.")
+(define-key global-map er/leader-prefix-key 'er/leader-prefix)
 
 
 ;; UTF-8 Everywhere
@@ -197,118 +212,146 @@
 ;; Evil - Vi Emulation Layer for Emacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; General makes it nicer to define keybindings
-(use-package general
-  :config
-  ;; See https://github.com/noctuid/general.el/issues/97
-  (general-auto-unbind-keys))
-
 (use-package evil
   :ensure t
   :demand t
-  :after general
-  :general
-  (:states '(normal visual motion)
-  ; M acts like zz,zb,zt
-  "M" 'recenter-top-bottom)
-  (:states 'motion
-   :keymaps 'widget-keymap
-   "TAB" 'widget-forward
-   "S-TAB" 'widget-backward
-   "o" 'widget-field-activate
-   "O" 'widget-button-press
-   )
-
-  ;; I find this more useful than undo-line
-  (:states 'normal
-  "U" 'undo-tree-redo)
-
-  ;; ESC always escapes
-  ;(:states 'emacs
-  ; [escape] 'keyboard-quit)
-  (:keymaps '(minibuffer-local-map
-              minibuffer-local-ns-map
-              minibuffer-local-completion-map
-              minibuffer-local-must-match-map
-              minibuffer-local-isearch-map)
-  [escape] 'abort-recursive-edit)
-  ("C-x ESC" 'keyboard-quit)
-
-  ;; Leader
-  (:states '(normal insert motion emacs visual operator)
-   :prefix "<SPC>"
-   :global-prefix "C-<SPC>"
-
-   "<SPC>" 'evil-execute-in-god-state
-   ";" 'evil-ex
-
-   "a" (eval `(general-simulate-key ,application-global-prefix))
-
-   "c" (general-simulate-key "C-c")
-   "x" (general-simulate-key "C-x")
-   "u" 'universal-argument
-
-   "!" 'term
-
-   "d" 'kill-this-buffer
-   "D" 'kill-buffer
-   "f" 'find-file
-   "w" 'save-buffer
-   "b" 'switch-to-buffer
-   "B" 'list-buffers
-   "q" 'delete-window
-   "Q" 'kill-buffer-and-window
-
-   "s" 'evil-window-split
-   "v" 'evil-window-vsplit
-   "o" 'delete-other-windows
-   "r" 'evil-window-rotate-downwards
-
-   "=" 'balance-windows
-   "+" 'evil-window-increase-height
-   "-" 'evil-window-decrease-height
-   ">" 'evil-window-increase-width
-   "<" 'evil-window-decrease-width
-
-   ;; These aren't used
-   "p" 'previous-buffer
-   "n" 'next-buffer
-
-   ;; "c" 'new-frame
-   ;; "C" 'delete-frame
-   ;; "n" 'other-frame
-
-   ;; Motion between windows
-   "h" 'evil-window-left
-   "j" 'evil-window-down
-   "k" 'evil-window-up
-   "l" 'evil-window-right
-   ;; These aren't used
-   "J" 'split-window-below
-   "K" 'split-window-above
-   "L" 'split-window-right
-
-   )
-
-  (:states '(normal insert motion emacs visual)
-   :prefix application-evil-prefix
-   :global-prefix application-global-prefix
-    "w" 'eww
-    "s" 'er/eshell-here
-    "S" 'shell
-    "x" 'term
-    "p" 'proced
-    "m" 'compile)
-
   :init
   (setq evil-want-integration nil)
-   :config
-   ;; For evil-collection
+  :bind (
+         :map evil-normal-state-map
+         ;; I find this more useful than Undo
+         ("U" . 'undo-tree-redo)
+         ;; M acts like zz,zb,zt
+         ("M" . 'recenter-top-bottom)
+         :map er/leader-map
+         ("<SPC>" . 'evil-execute-in-god-state)
+         (";" . 'evil-ex)
+
+         ("a" . 'er/application-prefix)
+
+         ("x" . 'Control-X-prefix)
+         ("u" . 'universal-argument)
+
+         ("!" . 'term)
+
+         ("d" . 'kill-this-buffer)
+         ("D" . 'kill-buffer)
+         ("f" . 'find-file)
+         ("w" . 'save-buffer)
+         ("b" . 'switch-to-buffer)
+         ("B" . 'list-buffers)
+         ("q" . 'delete-window)
+         ("Q" . 'kill-buffer-and-window)
+
+         ("s" . 'evil-window-split)
+         ("v" . 'evil-window-vsplit)
+         ("o" . 'delete-other-windows)
+         ("r" . 'evil-window-rotate-downwards)
+
+         ("=" . 'balance-windows)
+         ("+" . 'evil-window-increase-height)
+         ("-" . 'evil-window-decrease-height)
+         (">" . 'evil-window-increase-width)
+         ("<" . 'evil-window-decrease-width)
+
+         ;; These aren't used
+         ("p" . 'previous-buffer)
+         ("n" . 'next-buffer)
+
+         ;; ("c" . 'new-frame)
+         ;; ("C" . 'delete-frame)
+         ;; ("n" . 'other-frame)
+
+         ;; Motion between windows
+         ("h" . 'evil-window-left)
+         ("j" . 'evil-window-down)
+         ("k" . 'evil-window-up)
+         ("l" . 'evil-window-right)
+         ;; These aren't used
+         ("J" . 'split-window-below)
+         ("K" . 'split-window-above)
+         ("L" . 'split-window-right)
+
+         :map er/application-map
+         ("w" . 'eww)
+         ("s" . 'er/eshell-here)
+         ("S" . 'shell)
+         ("x" . 'term)
+         ("p" . 'proced)
+         ("m" . 'compile)
+         )
+
+  :config
+  ;; For evil-collection
   (evil-mode 1)
   (setq evil-ex-substitute-global t)
   (setq evil-shift-width 2)
   (setq-default evil-symbol-word-search t)
   (setq evil-cross-lines t)
+
+  ;; This doesn't break emacs state because <SPC>
+  ;; is not a prefix key there
+  ;; We can't simply use mode-specific-command-prefix because
+  ;; e.g. org-mode bindings aren't directly propogated to it
+  (define-key key-translation-map
+    (kbd "<SPC> c") (kbd "C-c"))
+  (define-key key-translation-map
+    (kbd "C-<SPC> c") (kbd "C-c"))
+
+  (evil-define-key 'motion widget-keymap
+    "TAB" 'widget-forward
+    "S-TAB" 'widget-backward
+    "o" 'widget-field-activate
+    "O" 'widget-button-press)
+
+  ;; Allow common emacs keybindings to be always available
+  ;; This does clobber some special vim behaviour
+  (define-key evil-insert-state-map "\C-e" 'end-of-line)
+  (define-key evil-motion-state-map "\C-e" 'evil-end-of-line)
+  (define-key evil-motion-state-map "\C-f" 'evil-forward-char)
+  (define-key evil-insert-state-map "\C-f" 'evil-forward-char)
+  (define-key evil-motion-state-map "\C-b" 'evil-backward-char)
+  (define-key evil-insert-state-map "\C-b" 'evil-backward-char)
+  (define-key evil-motion-state-map "\C-d" 'evil-delete-char)
+  (define-key evil-insert-state-map "\C-d" 'evil-delete-char)
+  (define-key evil-motion-state-map "\C-n" 'evil-next-line)
+  (define-key evil-insert-state-map "\C-n" 'evil-next-line)
+  (define-key evil-motion-state-map "\C-p" 'evil-previous-line)
+  (define-key evil-insert-state-map "\C-p" 'evil-previous-line)
+  (define-key evil-motion-state-map "\C-w" 'evil-delete)
+  (define-key evil-insert-state-map "\C-w" 'evil-delete)
+  (define-key evil-motion-state-map "\C-y" 'yank)
+  (define-key evil-insert-state-map "\C-y" 'yank)
+  (define-key evil-motion-state-map "\C-k" 'kill-line)
+  (define-key evil-insert-state-map "\C-k" 'kill-line)
+  (define-key evil-normal-state-map "Q" 'call-last-kbd-macro)
+  (define-key evil-visual-state-map "Q" 'call-last-kbd-macro)
+
+
+  ;; ESC actually quits
+  ;; From https://stackoverflow.com/questions/8483182/evil-mode-best-practice
+  (defun minibuffer-keyboard-quit ()
+    "Abort recursive edit.
+  In Delete Selection mode, if the mark is active, just deactivate it;
+  then it takes a second \\[keyboard-quit] to abort the minibuffer."
+    (interactive)
+    (if (and delete-selection-mode transient-mark-mode mark-active)
+        (setq deactivate-mark  t)
+      (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+    (abort-recursive-edit)))
+  (define-key evil-normal-state-map [escape] 'keyboard-quit)
+  (define-key evil-visual-state-map [escape] 'keyboard-quit)
+  (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+
+  (global-set-key (kbd "C-x ESC") 'keyboard-quit)
+
+  (define-key evil-motion-state-map er/application-evil-prefix-key 'er/application-prefix)
+  (define-key evil-motion-state-map er/leader-evil-prefix-key 'er/leader-prefix)
+
   )
 
 (use-package evil-collection
@@ -320,11 +363,9 @@
   (evil-collection-init))
 
 (use-package transpose-frame
-  :general
-  (:states '(normal insert motion emacs visual operator)
-   :prefix "<SPC>"
-   :global-prefix "C-<SPC>"
-   "R" 'transpose-frame))
+  :bind
+  (:map er/leader-map
+   ("R" . 'transpose-frame)))
 
 (use-package evil-surround
   :config
@@ -334,29 +375,24 @@
 (use-package linum-relative
   :ensure t
   :demand t
+  :bind
+  (:map er/application-map
+   ("l" . 'linum-relative-mode))
   :config
   (linum-relative-global-mode)
   (defun disable-linum-relative () (linum-relative-mode -1))
   ;; Disable relative linum in modes with a lot of folding
   ;; because it gives useless numbers and takes a long time to calculate
   (add-hook 'org-mode-hook 'disable-linum-relative)
-  (add-hook 'magit-mode-hook 'disable-linum-relative)
-  :general
-  (:states '(normal insert motion emacs visual)
-   :prefix application-evil-prefix
-   :global-prefix application-global-prefix
-   "l" 'linum-relative-mode))
-
-
+  (add-hook 'magit-mode-hook 'disable-linum-relative))
 
 (use-package evil-god-state
     :ensure t
-    :demand t
-    :general
-    (:states '(normal motion visual)
-     "<RET>" 'evil-execute-in-god-state)
-    (:states 'god
-     [escape] 'evil-god-state-bail))
+    :bind
+    (:map evil-motion-state-map
+          ("<RET>" . 'evil-execute-in-god-state)
+     :map evil-god-state-map
+          ([escape] . 'evil-god-state-bail)))
 
 
 ;; Workaround for Evil God mode in Evil Visual state
@@ -422,11 +458,9 @@
 
 
 (use-package swiper
-  :general
-  (:states '(normal insert motion emacs visual operator)
-   :prefix "<SPC>"
-   :global-prefix "C-<SPC>"
-   "/" 'swiper))
+  :bind
+  (:map er/leader-map
+   ("/" . 'swiper)))
 
 (use-package counsel
   :demand t
@@ -454,33 +488,25 @@
 ; Note: Appropriate packages need to be available on the system
 (use-package flycheck
   :demand t
+  :bind
   :config
   (global-flycheck-mode)
-
-  :general
-  ;; TODO: Replace these with Vim unimpared
-  ;; https://github.com/tpope/vim-unimpaired
-  (:states '(normal insert motion emacs visual)
-   :prefix application-evil-prefix
-   :global-prefix application-global-prefix
-   "kn" 'flycheck-next-error
-   "kp" 'flycheck-previous-error
-   "ks" 'flycheck-select-checker
-   "kx" 'flycheck-disable-checker
-   "ki" 'flycheck-manual
-   "kh" 'flycheck-disable-error-at-point
-   "kC" 'flycheck-compile
-   "kw" 'flycheck-copy-errors-as-kill
-   "k?" 'flycheck-describe-checker
-   "kl" 'flycheck-list-errors
-   "kd" 'flycheck-clear
-   "kH" 'display-local-help
-   "kV" 'flycheck-version
-   "kc" 'flycheck-buffer
-   "ke" 'flycheck-set-checker-executable
-   )
-
-  )
+  ;; TODO: Replace with vim unimpaired or a hydra
+  (define-key er/application-map "kn" 'flycheck-next-error)
+    (define-key er/application-map "kp" 'flycheck-previous-error)
+    (define-key er/application-map "ks" 'flycheck-select-checker)
+    (define-key er/application-map "kx" 'flycheck-disable-checker)
+    (define-key er/application-map "ki" 'flycheck-manual)
+    (define-key er/application-map "kh" 'flycheck-disable-error-at-point)
+    (define-key er/application-map "kC" 'flycheck-compile)
+    (define-key er/application-map "kw" 'flycheck-copy-errors-as-kill)
+    (define-key er/application-map "k?" 'flycheck-describe-checker)
+    (define-key er/application-map "kl" 'flycheck-list-errors)
+    (define-key er/application-map "kd" 'flycheck-clear)
+    (define-key er/application-map "kH" 'display-local-help)
+    (define-key er/application-map "kV" 'flycheck-version)
+    (define-key er/application-map "kc" 'flycheck-buffer)
+    (define-key er/application-map "ke" 'flycheck-set-checker-executable))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -516,17 +542,25 @@
 ;; Org-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
 (use-package org
   :ensure org-plus-contrib
-  :bind (
-         ("C-c c" . org-capture)
+  :bind (("C-c c" . org-capture)
          ("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c b" . org-iswitchb)
-
-         )
+         :map org-mode-map
+         ("C-c C-." . org-time-stamp-inactive)
+         :map er/application-map
+         ("a" . org-agenda-list)
+         ("A" . org-agenda)
+         ("c" . org-capture)
+         ("t" . org-todo-list))
   :config
-  (define-key org-mode-map (kbd "C-c C-.") 'org-time-stamp-inactive)
+  (evil-define-key 'motion org-agenda-keymap
+    "j" 'org-agenda-next-line
+    "k" 'org-agenda-previous-line
+    "x" 'org-agenda-capture)
 
   ;; Refiling
   (setq org-agenda-files '("~/org/projects.org"))
@@ -564,22 +598,6 @@
   (evil-set-initial-state 'org-agenda-mode 'motion)
   ;; Open org agenda in the current window, not destroying layout
   (setq org-agenda-window-setup 'current-window)
-  :general
-  (:states '(normal insert motion emacs visual)
-   :prefix application-evil-prefix
-   :global-prefix application-global-prefix
-   "a" 'org-agenda-list
-   "A" 'org-agenda
-   "c" 'org-capture
-   "t" 'org-todo-list
-   )
-  (:keymaps 'org-agenda-keymap
-   :states 'motion
-   "j" 'org-agenda-next-line
-   "k" 'org-agenda-previous-line
-   "x" 'org-agenda-capture
-   )
-
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -673,18 +691,11 @@ Lisp function does not specify a special indentation."
   :mode "\\.ya?ml\\'")
 
 
-;; TODO: Propogate this
-(defmacro def-app-key (key action)
-  `(progn
-     (evil-define-key 'normal 'global ,(concat "-" key) ,action)
-     (global-set-key (kbd ,(concat "<f6>" key)) ,action)))
-
-;;; Version Control
+;;; Version Control - except in Cygwin where it's dog slow
 (if (not (eq system-type 'cygwin))
-(use-package evil-magit
-  :config
-  (def-app-key "g" 'magit-status))
-)
+    (use-package evil-magit
+      :bind (:map er/application-map
+                  ("g" . magit-status))))
 
 
 
@@ -779,153 +790,154 @@ Lisp function does not specify a special indentation."
 (setq ispell-silently-savep 't)
 (require 'ispell)
 
-;; Email
-(use-package notmuch
-  :ensure nil
-  :config
-  ;; Set the default text renderer to something that
-  ;; can handle most html emails
-  (setq mm-text-html-renderer 'gnus-w3m)
-
-
-  (setq-default notmuch-archive-tags '("-inbox" "-deleted" "+archive"))
-  (setq-default er/notmuch-delete-tags '("-inbox" "+deleted" "-archive"))
-
-  (evil-set-initial-state 'notmuch-hello-mode 'motion)
-  (evil-set-initial-state 'notmuch-search-mode 'motion)
-  (evil-set-initial-state 'notmuch-show-mode 'motion)
-  ;(evil-set-initial-state 'notmuch-tree-mode 'motion)
-  ;(evil-set-initial-state 'notmuch-message-mode 'normal)
-
-  (defun er/notmuch-inbox ()
-      "Jump to notmuch tag inbox"
-    (interactive)
-    (notmuch-search "tag:inbox"))
-
-
-  (defun er/notmuch-search-delete-thread (&optional unarchive beg end)
-    "Mark selected threads as to delete"
-    (interactive (cons current-prefix-arg (notmuch-search-interactive-region)))
-    ;; Abuse emacs scope bindings
-    (let ((notmuch-archive-tags er/notmuch-delete-tags))
-      (notmuch-search-archive-thread unarchive beg end)))
-
-  (defun er/notmuch-show-next-or-next-thread ()
-    (interactive)
-    (unless (notmuch-show-next-open-message)
-      (notmuch-show-next-thread-show)))
-
-  (defun er/notmuch-show-previous-or-previous-thread ()
-    (interactive)
-    (unless (notmuch-show-previous-open-message)
-      (notmuch-show-previous-thread-show)))
-
-  (defun er/notmuch-show-delete-message-then-next-or-next-thread ()
-    "Mark current message as delete, then show the next open message in the current thread"
-    (interactive)
-    (let ((notmuch-archive-tags er/notmuch-delete-tags))
-      (notmuch-show-archive-message-then-next-or-next-thread)))
-
-  (defun er/notmuch-show-delete-thread-then-next ()
-    (interactive)
-    (let ((notmuch-archive-tags er/notmuch-delete-tags))
-      (notmuch-show-archive-thread-then-next)))
-
-  (setq message-kill-buffer-on-exit t)
-  :general
-  (:states '(normal insert motion emacs visual)
-   :prefix application-evil-prefix
-   :global-prefix application-global-prefix
-   "e" 'er/notmuch-inbox
-   "/" 'notmuch-search
-   "n" 'notmuch-mua-new-mail
-   )
-
-  (:keymaps 'notmuch-common-keymap
-   :states 'motion
-   "r" 'notmuch-refresh-this-buffer
-   "R" 'notmuch-poll-and-refresh-this-buffer
-   "s" 'notmuch-search
-   "S" 'notmuch-tree
-   ;"gs" 'notmuch-jump
-   ;"gS" 'notmuch-jump-search
-   )
-
-  (:keymaps 'notmuch-hello-mode-map
-   :states 'motion
-   "i" 'evil-insert
-   "a" 'evil-append
-   "I" 'evil-insert-line
-   "a" 'evil-append-line
-   )
-
-  (:keymaps 'notmuch-search-mode-map
-   :states 'motion
-   "o" 'notmuch-search-show-thread
-
-   "p" 'notmuch-search-previous-thread
-
-   ;; For some reason the search-mode bindings shadow show-mode
-   ;; so use capitals to avoid clashes
-   ;; TODO fixme
-   "D" 'er/notmuch-search-delete-thread
-   "A" 'notmuch-search-archive-thread
-
-   "u" 'notmuch-search-add-tag
-   "gu" 'notmuch-search-tag-all
-   "U" 'notmuch-search-remove-tag
-
-   "i" 'notmuch-search-reply-to-thread-sender
-   "I" 'notmuch-search-reply-to-thread
-
-   "c" 'notmuch-tag-jump
-
-   ;"x" 'notmuch-search-archive-thread
-
-   ;notmuch-search-order
-  )
-
-  (:keymaps 'notmuch-show-mode-map
-   :states 'motion
-   ;"x" 'notmuch-show-archive-message-then-next-or-next-thread
-   ;"x" 'notmuch-show-archive-thread-then-next
-
-   "d" 'er/notmuch-show-delete-thread-then-next
-
-   "a" 'notmuch-show-archive-message-then-next-or-next-thread
-   "p" 'notmuch-show-previous-thread-show
-   ;;"gj" 'notmuch-show-next-open-message
-   "gj" 'er/notmuch-show-next-or-next-thread
-
-   ;;"gk" 'notmuch-show-previous-open-message
-   "gk" 'er/notmuch-show-previous-or-previous-thread
-
-   "i" 'notmuch-show-reply-sender
-   "I" 'notmuch-show-reply
-   "gI" 'notmuch-show-forward-open-messages
-   "gi" 'notmuch-show-forward-message
-
-   "gr" 'notmuch-show-view-raw-message
-   "gR" 'notmuch-show-toggle-visibility-headers
-
-   "u" 'notmuch-show-add-tag
-   "gu" 'notmuch-show-tag-all
-   "U" 'notmuch-show-remove-tag
-
-   "c" 'notmuch-tag-jump
-   "C" 'notmuch-show-stash-map
-
-   ;"gJ" 'notmuch-tree-from-show-current-query
-
-   "o" 'notmuch-show-toggle-message
-   "O" 'notmuch-show-save-attachments
-   ;;todo follow link
-
-   ;;l notmuch-show-filter-thread
-   ;;t toggle-truncate-lines
-   )
-
-  )
+;; TODO: Migrate
+;;;; Email
+;;(use-package notmuch
+;;  :ensure nil
+;;  :config
+;;  ;; Set the default text renderer to something that
+;;  ;; can handle most html emails
+;;  (setq mm-text-html-renderer 'gnus-w3m)
+;;
+;;
+;;  (setq-default notmuch-archive-tags '("-inbox" "-deleted" "+archive"))
+;;  (setq-default er/notmuch-delete-tags '("-inbox" "+deleted" "-archive"))
+;;
+;;  (evil-set-initial-state 'notmuch-hello-mode 'motion)
+;;  (evil-set-initial-state 'notmuch-search-mode 'motion)
+;;  (evil-set-initial-state 'notmuch-show-mode 'motion)
+;;  ;(evil-set-initial-state 'notmuch-tree-mode 'motion)
+;;  ;(evil-set-initial-state 'notmuch-message-mode 'normal)
+;;
+;;  (defun er/notmuch-inbox ()
+;;      "Jump to notmuch tag inbox"
+;;    (interactive)
+;;    (notmuch-search "tag:inbox"))
+;;
+;;
+;;  (defun er/notmuch-search-delete-thread (&optional unarchive beg end)
+;;    "Mark selected threads as to delete"
+;;    (interactive (cons current-prefix-arg (notmuch-search-interactive-region)))
+;;    ;; Abuse emacs scope bindings
+;;    (let ((notmuch-archive-tags er/notmuch-delete-tags))
+;;      (notmuch-search-archive-thread unarchive beg end)))
+;;
+;;  (defun er/notmuch-show-next-or-next-thread ()
+;;    (interactive)
+;;    (unless (notmuch-show-next-open-message)
+;;      (notmuch-show-next-thread-show)))
+;;
+;;  (defun er/notmuch-show-previous-or-previous-thread ()
+;;    (interactive)
+;;    (unless (notmuch-show-previous-open-message)
+;;      (notmuch-show-previous-thread-show)))
+;;
+;;  (defun er/notmuch-show-delete-message-then-next-or-next-thread ()
+;;    "Mark current message as delete, then show the next open message in the current thread"
+;;    (interactive)
+;;    (let ((notmuch-archive-tags er/notmuch-delete-tags))
+;;      (notmuch-show-archive-message-then-next-or-next-thread)))
+;;
+;;  (defun er/notmuch-show-delete-thread-then-next ()
+;;    (interactive)
+;;    (let ((notmuch-archive-tags er/notmuch-delete-tags))
+;;      (notmuch-show-archive-thread-then-next)))
+;;
+;;  (setq message-kill-buffer-on-exit t)
+;;  :general
+;;  (:states '(normal insert motion emacs visual)
+;;   :prefix er/application-evil-prefix-key
+;;   :global-prefix er/application-prefix-key
+;;   "e" 'er/notmuch-inbox
+;;   "/" 'notmuch-search
+;;   "n" 'notmuch-mua-new-mail
+;;   )
+;;
+;;  (:keymaps 'notmuch-common-keymap
+;;   :states 'motion
+;;   "r" 'notmuch-refresh-this-buffer
+;;   "R" 'notmuch-poll-and-refresh-this-buffer
+;;   "s" 'notmuch-search
+;;   "S" 'notmuch-tree
+;;   ;"gs" 'notmuch-jump
+;;   ;"gS" 'notmuch-jump-search
+;;   )
+;;
+;;  (:keymaps 'notmuch-hello-mode-map
+;;   :states 'motion
+;;   "i" 'evil-insert
+;;   "a" 'evil-append
+;;   "I" 'evil-insert-line
+;;   "a" 'evil-append-line
+;;   )
+;;
+;;  (:keymaps 'notmuch-search-mode-map
+;;   :states 'motion
+;;   "o" 'notmuch-search-show-thread
+;;
+;;   "p" 'notmuch-search-previous-thread
+;;
+;;   ;; For some reason the search-mode bindings shadow show-mode
+;;   ;; so use capitals to avoid clashes
+;;   ;; TODO fixme
+;;   "D" 'er/notmuch-search-delete-thread
+;;   "A" 'notmuch-search-archive-thread
+;;
+;;   "u" 'notmuch-search-add-tag
+;;   "gu" 'notmuch-search-tag-all
+;;   "U" 'notmuch-search-remove-tag
+;;
+;;   "i" 'notmuch-search-reply-to-thread-sender
+;;   "I" 'notmuch-search-reply-to-thread
+;;
+;;   "c" 'notmuch-tag-jump
+;;
+;;   ;"x" 'notmuch-search-archive-thread
+;;
+;;   ;notmuch-search-order
+;;  )
+;;
+;;  (:keymaps 'notmuch-show-mode-map
+;;   :states 'motion
+;;   ;"x" 'notmuch-show-archive-message-then-next-or-next-thread
+;;   ;"x" 'notmuch-show-archive-thread-then-next
+;;
+;;   "d" 'er/notmuch-show-delete-thread-then-next
+;;
+;;   "a" 'notmuch-show-archive-message-then-next-or-next-thread
+;;   "p" 'notmuch-show-previous-thread-show
+;;   ;;"gj" 'notmuch-show-next-open-message
+;;   "gj" 'er/notmuch-show-next-or-next-thread
+;;
+;;   ;;"gk" 'notmuch-show-previous-open-message
+;;   "gk" 'er/notmuch-show-previous-or-previous-thread
+;;
+;;   "i" 'notmuch-show-reply-sender
+;;   "I" 'notmuch-show-reply
+;;   "gI" 'notmuch-show-forward-open-messages
+;;   "gi" 'notmuch-show-forward-message
+;;
+;;   "gr" 'notmuch-show-view-raw-message
+;;   "gR" 'notmuch-show-toggle-visibility-headers
+;;
+;;   "u" 'notmuch-show-add-tag
+;;   "gu" 'notmuch-show-tag-all
+;;   "U" 'notmuch-show-remove-tag
+;;
+;;   "c" 'notmuch-tag-jump
+;;   "C" 'notmuch-show-stash-map
+;;
+;;   ;"gJ" 'notmuch-tree-from-show-current-query
+;;
+;;   "o" 'notmuch-show-toggle-message
+;;   "O" 'notmuch-show-save-attachments
+;;   ;;todo follow link
+;;
+;;   ;;l notmuch-show-filter-thread
+;;   ;;t toggle-truncate-lines
+;;   )
+;;
+;;  )
 
 
 

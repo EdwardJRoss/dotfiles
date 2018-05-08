@@ -672,18 +672,20 @@ Lisp function does not specify a special indentation."
 (use-package yaml-mode
   :mode "\\.ya?ml\\'")
 
+
+;; TODO: Propogate this
+(defmacro def-app-key (key action)
+  `(progn
+     (evil-define-key 'normal 'global ,(concat "-" key) ,action)
+     (global-set-key (kbd ,(concat "<f6>" key)) ,action)))
+
 ;;; Version Control
 (if (not (eq system-type 'cygwin))
 (use-package evil-magit
-  :demand
-  :after evil
-  :general
-  (:states '(normal insert motion emacs visual)
-   :prefix application-evil-prefix
-   :global-prefix application-global-prefix
-   "g" 'magit-status)
-  )
+  :config
+  (def-app-key "g" 'magit-status))
 )
+
 
 
 ;;; Python

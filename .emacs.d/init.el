@@ -371,20 +371,27 @@
   :config
   (global-evil-surround-mode 1))
 
-;; Relative line numbers for easy movement in Evil mode
-(use-package linum-relative
-  :ensure t
-  :demand t
-  :bind
-  (:map er/application-map
-   ("l" . 'linum-relative-mode))
-  :config
-  (linum-relative-global-mode)
-  (defun disable-linum-relative () (linum-relative-mode -1))
-  ;; Disable relative linum in modes with a lot of folding
-  ;; because it gives useless numbers and takes a long time to calculate
-  (add-hook 'org-mode-hook 'disable-linum-relative)
-  (add-hook 'magit-mode-hook 'disable-linum-relative))
+;;; Relative line numbers for easy movement in Evil mode
+(if (>= emacs-major-version 26)
+    ;; In newer emacs relative line numbers are is built in
+    (progn
+      (setq display-line-numbers-current-absolute nil)
+      (setq display-line-numbers-type 'visual)
+      (global-display-line-numbers-mode)
+      (define-key er/application-map "l" display-line-numbers-mode))
+  (use-package linum-relative
+    :ensure t
+    :demand t
+    :bind
+    (:map er/application-map
+          ("l" . 'linum-relative-mode))
+    :config
+    (linum-relative-global-mode)
+    (defun disable-linum-relative () (linum-relative-mode -1))
+    ;; Disable relative linum in modes with a lot of folding
+    ;; because it gives useless numbers and takes a long time to calculate
+    (add-hook 'org-mode-hook 'disable-linum-relative)
+    (add-hook 'magit-mode-hook 'disable-linum-relative)))
 
 (use-package evil-god-state
     :ensure t

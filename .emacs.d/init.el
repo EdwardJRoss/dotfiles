@@ -756,7 +756,10 @@ Lisp function does not specify a special indentation."
   (setq ess-ask-for-ess-directory nil)
   ;; Smart S assign is more annoying than helpful
   ;; Can't invoke it directly for some reason
-  (ess-toggle-underscore nil)
+  ;;(ess-toggle-underscore nil)
+  ;; So that seemed to break in 17.11
+  ;; Instead we just get it to replace _ with _
+  (setq ess-S-assign "_")
   ;; Need to put this in a hook or else ESS won't respect it
   (defun my-ess-settings ()
     ;; ESS by default has a crazy indentation scheme where comments are indented

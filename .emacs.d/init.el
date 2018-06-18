@@ -569,6 +569,7 @@
     "k" 'org-agenda-previous-line
     "x" 'org-agenda-capture)
 
+
   ;; Refiling
   (setq org-agenda-files '("~/org/projects.org"))
   (setq org-default-notes-file "~/org/inbox.org")
@@ -599,8 +600,13 @@
            (file "~/org/inbox.org")
            "* %?\n%u\n" :clock-in t :clock-resume t))
         )
+
+  ;; Requires module org-id
+  ;; Automatically create unique identifiers for cross links
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+
   (setq org-export-backends '(ascii html icalendar latex md odt org))
-  (setq org-modules '(org-bbdb org-bibtex org-docview org-eww org-gnus org-info org-irc org-mhe org-protocol org-w3m org-eshell org-git-link org-man org-notmuch org-registry))
+  (setq org-modules '(org-id org-bbdb org-bibtex org-docview org-eww org-gnus org-info org-irc org-mhe org-protocol org-w3m org-eshell org-git-link org-man org-notmuch org-registry))
 
   (evil-set-initial-state 'org-agenda-mode 'motion)
   ;; Open org agenda in the current window, not destroying layout

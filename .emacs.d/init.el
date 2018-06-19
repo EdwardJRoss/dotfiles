@@ -573,14 +573,19 @@
   ;; Refiling
   (setq org-agenda-files '("~/org/projects.org"))
   (setq org-default-notes-file "~/org/inbox.org")
+  ;; Allow refiling accross files
   (setq org-refile-use-outline-path 'file)
+  ;; Fill in the whole refile path at once
+  ;; This is required for use with ido
+  (setq org-outline-path-complete-in-steps nil)
+  ;; Allow creating top level nodes
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-refile-targets
         '(
           ("~/org/someday.org" :level . 1)
           ("~/org/reference.org" :level . 1)
-          ("~/org/projects.org" :maxlevel . 3)
-          ("~/org/reference.org" :level . 1)))
+          ("~/org/projects.org" :level . 1)
+          ("~/org/reference.org" :maxlevel . 3)))
   ;; Capture
   (setq org-capture-templates
         '(

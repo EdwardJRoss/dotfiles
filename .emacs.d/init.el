@@ -570,6 +570,13 @@
     "x" 'org-agenda-capture)
 
 
+  ;; Don't bury the agenda by default
+  (setq org-agenda-sticky 't)
+  ;; Restore agenda buffer instead of regenerating it
+  ;; (e.g. reordering TODOs), this doesn't load new items.
+  (setq org-agenda-restore-windows-after-quit 't)
+
+
   ;; Refiling
   (setq org-agenda-files '("~/org/projects.org"))
   (setq org-default-notes-file "~/org/inbox.org")

@@ -223,6 +223,8 @@
          ("U" . 'undo-tree-redo)
          ;; M acts like zz,zb,zt
          ("M" . 'recenter-top-bottom)
+         ;; Comment in/out
+         ("z;" . 'comment-dwim)
          :map er/leader-map
          ("<SPC>" . 'evil-execute-in-god-state)
          (";" . 'evil-ex)

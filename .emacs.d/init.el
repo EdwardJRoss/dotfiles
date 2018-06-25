@@ -759,10 +759,7 @@ Lisp function does not specify a special indentation."
                              (setq eshell-path-env path-env)))))))))
   )
 
-(use-package py-autopep8
-  :config
-  ;; Conform to PEP-8 on Save
-  (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
+(use-package py-autopep8)
 
 (use-package ess
   :commands R

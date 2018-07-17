@@ -436,7 +436,8 @@
 ;; Help with interaction and interactivity
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package smart-mode-line
-  :config
+  :disabled
+  ;; Pending https://github.com/Malabarba/smart-mode-line/issues/198
   (setq sml/name-width 15)
   (setq sml/no-confirm-load-theme t)
   (sml/setup))

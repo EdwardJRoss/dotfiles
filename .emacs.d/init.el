@@ -1017,6 +1017,14 @@ Lisp function does not specify a special indentation."
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil))))))
 
+(use-package pdf-tools
+  :load-path "site-lisp/pdf-tools/lisp"
+  :magic ("%PDF" . pdf-view-mode)
+  :config
+  (pdf-tools-install))
+
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode))
 
 ;; Put/save customisations through customize in a separate file
 (defconst custom-file (expand-file-name "custom.el" user-emacs-directory))

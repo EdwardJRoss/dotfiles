@@ -967,7 +967,13 @@ Lisp function does not specify a special indentation."
 ;;
 ;;  )
 
+(defun er/scroll-right (count)
+  (interactive "p")
+  (right-char (* count (/ (window-width) 2))))
 
+(defun er/scroll-left (count)
+  (interactive "p")
+  (left-char (* count (/ (window-width) 2))))
 
 (use-package hydra
   :config
@@ -975,8 +981,8 @@ Lisp function does not specify a special indentation."
     "zoom"
     ("=" text-scale-increase "in")
     ("-" text-scale-decrease "out")
-    ("l" evil-scroll-right "right")
-    ("h" evil-scroll-left "left")
+    ("l" er/scroll-right "right")
+    ("h" er/scroll-left "left")
     ("j" evil-scroll-down "down")
     ("k" evil-scroll-up "up")))
 

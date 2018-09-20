@@ -217,6 +217,7 @@
   :demand t
   :init
   (setq evil-want-integration nil)
+  (setq evil-want-keybinding nil)
   :bind (
          :map evil-normal-state-map
          ;; I find this more useful than Undo
@@ -793,6 +794,11 @@ Lisp function does not specify a special indentation."
   ("\\.Snw" . poly-noweb+r-mode)
   ("\\.Rnw" . poly-noweb+r-mode)
   ("\\.Rmd" . poly-markdown+r-mode))
+(use-package poly-markdown)
+(use-package poly-noweb)
+
+(use-package poly-R)
+(use-package poly-org)
 
 (use-package csv-mode)
 

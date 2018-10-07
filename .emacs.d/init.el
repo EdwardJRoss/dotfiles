@@ -730,10 +730,18 @@ Lisp function does not specify a special indentation."
 
 ;;; Python
 
+(defun er/elpy-shell-send-region-or-statement-and-step (&optional arg)
+  (interactive "P")
+  (if (use-region-p)
+      (elpy-shell-send-region-or-buffer-and-step)
+    (elpy-shell-send-statement-and-step)))
+
 ;; Required packages: jedi importmagic autopep8 yapf flake8 pylint
 ;;                    jupyter ipdb
 (use-package elpy
   :config
+  ;; Make more consistent with ESS
+  (bind-key "C-c C-c" 'er/elpy-shell-send-region-or-statement-and-step elpy-mode-map)
   ;; Use flycheck instead of flymake
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
   (add-hook 'elpy-mode-hook 'flycheck-mode)

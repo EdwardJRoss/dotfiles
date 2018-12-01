@@ -26,6 +26,8 @@ for j in "$BASEDIR"/*; do
 
         # Skip this file
         [ "$FILE" = "$(basename "$0")" ] && continue
+        # Skip README files
+        [[ "$FILE" = README* ]] && continue
 
         if [ -h "$BASEFILE" ]; then
            echo "Updating link : $BASEFILE"

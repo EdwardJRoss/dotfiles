@@ -133,6 +133,3 @@ if [[ -e /usr/share/git/git-prompt.sh ]]; then
 else
     export PS1="$Green[\u@\h]$Purple$Color_Off\n\w $ "
 fi
-
-# https://developer.atlassian.com/blog/2016/02/best-way-to-store-dotfiles-git-bare-repo/
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'

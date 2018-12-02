@@ -744,7 +744,7 @@ Lisp function does not specify a special indentation."
   (bind-key "C-c C-c" 'er/elpy-shell-send-region-or-statement-and-step elpy-mode-map)
   ;; Use flycheck instead of flymake
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode)
+  (add-hook 'elpy-mode-hook 'hs-minor-mode)
   (with-eval-after-load 'python (elpy-enable))
 
   (setq python-shell-interpreter "jupyter"

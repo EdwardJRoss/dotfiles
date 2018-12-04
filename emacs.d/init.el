@@ -629,6 +629,16 @@
   (setq org-agenda-window-setup 'current-window)
   )
 
+
+(use-package dumb-jump
+  :bind
+  (:map evil-motion-state-map
+        ("C-]" . 'dumb-jump-go))
+  :config
+  (setq dumb-jump-selector 'ivy)
+  (setq dumb-jump-force-searcher 'rg)
+  :ensure)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Programming Language Support
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -355,6 +355,29 @@
   (define-key evil-motion-state-map er/application-evil-prefix-key 'er/application-prefix)
   (define-key evil-motion-state-map er/leader-evil-prefix-key 'er/leader-prefix)
 
+  ;; Folding
+  (evil-define-key 'normal 'global (kbd "TAB") 'evil-toggle-fold)
+
+  (defun er/hs-hide-1 ()
+    "Hide-show 1 level."
+    (hs-hide-level 1))
+
+  (defun er/hs-toggle-1 ()
+    "Hide-show show 1 level or hide."
+    (if (hs-already-hidden-p)
+        (hs-hide-level 1)
+      (hs-hide-block)))
+
+  (setq evil-fold-list
+        (cons
+         '((hs-minor-mode)
+           :open-all   hs-show-all
+           :close-all  hs-hide-all
+           :toggle     er/hs-toggle-1
+           :open       er/hs-hide-1
+           :open-rec   hs-show-block
+           :close      hs-hide-block)
+         evil-fold-list))
   )
 
 (use-package evil-collection

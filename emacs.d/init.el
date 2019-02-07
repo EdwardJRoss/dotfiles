@@ -633,7 +633,8 @@
 (use-package dumb-jump
   :bind
   (:map evil-motion-state-map
-        ("C-]" . 'dumb-jump-go))
+        ("C-]" . 'dumb-jump-go)
+        ("C-}" . 'dumb-jump-go-prompt))
   :config
   (setq dumb-jump-selector 'ivy)
   (setq dumb-jump-force-searcher 'rg)

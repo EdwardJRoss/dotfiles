@@ -841,6 +841,9 @@ Lisp function does not specify a special indentation."
 (use-package poly-R)
 (use-package poly-org)
 
+; Open mmark files as markdown
+(add-to-list 'auto-mode-alist '("\\.mmark\\'" . markdown-mode))
+
 (use-package csv-mode)
 
 (use-package groovy-mode

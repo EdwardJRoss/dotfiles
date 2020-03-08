@@ -219,7 +219,7 @@
 (use-package evil
   :demand t
   :init
-  (setq evil-want-integration nil)
+  (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   :bind (
          :map evil-normal-state-map

@@ -13,6 +13,10 @@
 ;; General configuration independent of packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Make startup faster by reducing the frequency of garbage
+;; collection.  The default is 800 kilobytes.  Measured in bytes.
+;; https://blog.d46.us/advanced-emacs-startup/
+(setq gc-cons-threshold (* 50 1000 1000))
 
 ;; Add custom lisp
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -213,7 +217,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package evil
-  :ensure t
   :demand t
   :init
   (setq evil-want-integration nil)
@@ -382,7 +385,6 @@
 
 (use-package evil-collection
   :after evil
-  :ensure t
   :config
   ;; Don't let it steal org-mode tab bindings
   (setq evil-collection-outline-bind-tab-p nil)
@@ -406,7 +408,6 @@
       (global-display-line-numbers-mode)
       (define-key er/application-map "l" display-line-numbers-mode))
   (use-package linum-relative
-    :ensure t
     :demand t
     :bind
     (:map er/application-map
@@ -420,7 +421,6 @@
     (add-hook 'magit-mode-hook 'disable-linum-relative)))
 
 (use-package evil-god-state
-    :ensure t
     :bind
     (:map evil-motion-state-map
           ("<RET>" . 'evil-execute-in-god-state)
@@ -447,12 +447,10 @@
       "evil-activate-visual-state")))
 
 (use-package god-mode
-    :ensure t
     :bind (("C-<RET>" . god-local-mode)))
 
 
 (use-package evil-exchange
-  :demand t
   :config
   (evil-exchange-install))
 
@@ -476,7 +474,6 @@
   (add-hook 'undo-tree-mode-hook 'er/diminish-undo-tree))
 
 (use-package which-key
-    :demand t
     ;:bind (("C-h ?" . which-key-show-top-level))
     :diminish which-key-mode
     :config
@@ -497,7 +494,6 @@
    ("/" . 'swiper)))
 
 (use-package counsel
-  :demand t
   :diminish counsel-mode
   :config
   ; Ignore dotfiles by default
@@ -521,25 +517,22 @@
 ; TODO: Only load on extensions that can flycheck
 ; Note: Appropriate packages need to be available on the system
 (use-package flycheck
-  :demand t
-  :bind
-  :config
-  ;; TODO: Replace with vim unimpaired or a hydra
-  (define-key er/application-map "kn" 'flycheck-next-error)
-    (define-key er/application-map "kp" 'flycheck-previous-error)
-    (define-key er/application-map "ks" 'flycheck-select-checker)
-    (define-key er/application-map "kx" 'flycheck-disable-checker)
-    (define-key er/application-map "ki" 'flycheck-manual)
-    (define-key er/application-map "kh" 'flycheck-disable-error-at-point)
-    (define-key er/application-map "kC" 'flycheck-compile)
-    (define-key er/application-map "kw" 'flycheck-copy-errors-as-kill)
-    (define-key er/application-map "k?" 'flycheck-describe-checker)
-    (define-key er/application-map "kl" 'flycheck-list-errors)
-    (define-key er/application-map "kd" 'flycheck-clear)
-    (define-key er/application-map "kH" 'display-local-help)
-    (define-key er/application-map "kV" 'flycheck-version)
-    (define-key er/application-map "kc" 'flycheck-buffer)
-    (define-key er/application-map "ke" 'flycheck-set-checker-executable))
+  :bind (:map er/application-map
+              ("kn" . flycheck-next-error)
+              ("kp" . flycheck-previous-error)
+              ("ks" . flycheck-select-checker)
+              ("kx" . flycheck-disable-checker)
+              ("ki" . flycheck-manual)
+              ("kh" . flycheck-disable-error-at-point)
+              ("kC" . flycheck-compile)
+              ("kw" . flycheck-copy-errors-as-kill)
+              ("k?" . flycheck-describe-checker)
+              ("kl" . flycheck-list-errors)
+              ("kd" . flycheck-clear)
+              ("kH" . display-local-help)
+              ("kV" . flycheck-version)
+              ("kc" . flycheck-buffer)
+              ("ke" . flycheck-set-checker-executable)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -548,8 +541,7 @@
 ;; Autocompletion: Company mode is better thought out than auto-complete.
 ;; Comparison with auto-complete: https://github.com/company-mode/company-mode/issues/68 for comparison
 (use-package company
-  :ensure t
-  :demand t
+  :defer 2
   :config
   (global-company-mode)
 
@@ -772,6 +764,7 @@ Lisp function does not specify a special indentation."
 ;; Required packages: jedi importmagic autopep8 yapf flake8 pylint
 ;;                    jupyter ipdb
 (use-package elpy
+  :mode "\\.py\\'"
   :config
   ;; Make more consistent with ESS
   (bind-key "C-c C-c" 'er/elpy-shell-send-region-or-statement-and-step elpy-mode-map)
@@ -802,10 +795,12 @@ Lisp function does not specify a special indentation."
                              (setq eshell-path-env path-env)))))))))
   )
 
-(use-package py-autopep8)
+(use-package py-autopep8
+  :mode "\\.py\\'")
 
 (use-package ess
   :commands R
+  :mode "\\.R\\'"
   :init (require 'ess-site)
   :config
   ;; There's a bug with flycheck lintr caching
@@ -832,41 +827,40 @@ Lisp function does not specify a special indentation."
 
 (use-package polymode
   :mode
-  ("\\.Snw" . poly-noweb+r-mode)
-  ("\\.Rnw" . poly-noweb+r-mode)
   ("\\.Rmd" . poly-markdown+r-mode))
-(use-package poly-markdown)
-(use-package poly-noweb)
+(use-package poly-markdown
+  :mode "\\.Rmd")
 
-(use-package poly-R)
-(use-package poly-org)
+(use-package poly-R
+  :mode "\\.Rmd")
 
 ; Open mmark files as markdown
-(add-to-list 'auto-mode-alist '("\\.mmark\\'" . markdown-mode))
-
-(use-package csv-mode)
-
-(use-package groovy-mode
-  :mode "\\.groovy\\'")
-
-(use-package geiser)
+(use-package markdown-mode
+  :mode
+  ("\\.md" . markdown-mode)
+  ("\\.mmark" . markdown-mode))
 
 ;; Spelling
 ;; Requires aspell to be installed
 ;; Location of the Aspell binary for Windows (http://aspell.net/win32/)
-(defvar er/windows-aspell-path "C:/Program Files (x86)/Aspell/bin/")
-(if (file-exists-p er/windows-aspell-path)
-    (add-to-list 'exec-path er/windows-aspell-path))
-;; If we don't have Aussie English...
-(setq ispell-dictionary "british")
-;; aspell is more accurate than hunspell or ispell, although a little slower
-(setq ispell-program-name "aspell")
-;; Location of personal dictionary for customisations
-;; The default doesn't seem to work on windows
-(setq ispell-personal-dictionary "~/.aspell.en.pws")
-;; Save on insertion without confirmation
-(setq ispell-silently-savep 't)
-(require 'ispell)
+
+(use-package ispell
+  :commands ispell
+  :bind (:map er/application-map ("i" . ispell))
+  :config
+  (defvar er/windows-aspell-path "C:/Program Files (x86)/Aspell/bin/")
+  (if (file-exists-p er/windows-aspell-path)
+      (add-to-list 'exec-path er/windows-aspell-path))
+  ;; If we don't have Aussie English...
+  (setq ispell-dictionary "british")
+  ;; aspell is more accurate than hunspell or ispell, although a little slower
+  (setq ispell-program-name "aspell")
+  ;; Location of personal dictionary for customisations
+  ;; The default doesn't seem to work on windows
+  (setq ispell-personal-dictionary "~/.aspell.en.pws")
+  ;; Save on insertion without confirmation
+  (setq ispell-silently-savep 't)
+  )
 
 ;; TODO: Migrate
 ;;;; Email
@@ -1039,10 +1033,8 @@ Lisp function does not specify a special indentation."
 ;; TODO: Buffer local?
 ;; TODO: ESC escapes?
 (use-package caps-lock
-  :config
-  (global-set-key (kbd "C-c u") 'caps-lock-mode)
-  (evil-define-key 'normal 'global "zu" 'caps-lock-mode))
-
+  :bind (("C-c u" . 'caps-lock-mode)
+  :map evil-normal-state-map ("zu"  . 'caps-lock-mode)))
 
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)
@@ -1074,3 +1066,18 @@ Lisp function does not specify a special indentation."
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file))
 (load custom-file)
+
+
+
+;; Make gc pauses faster by decreasing the threshold.
+;; https://blog.d46.us/advanced-emacs-startup/
+(setq gc-cons-threshold (* 2 1000 1000))
+
+;; Use a hook so the message doesn't get clobbered by other messages.
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))

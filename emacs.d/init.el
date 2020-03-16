@@ -764,7 +764,7 @@ Lisp function does not specify a special indentation."
 ;; Required packages: jedi importmagic autopep8 yapf flake8 pylint
 ;;                    jupyter ipdb
 (use-package elpy
-  :mode "\\.py\\'"
+  :mode ("\\.py\\'" . python-mode)
   :config
   ;; Make more consistent with ESS
   (bind-key "C-c C-c" 'er/elpy-shell-send-region-or-statement-and-step elpy-mode-map)
@@ -800,7 +800,7 @@ Lisp function does not specify a special indentation."
 
 (use-package ess
   :commands R
-  :mode "\\.R\\'"
+  :mode ("\\.R\\'" . R-mode)
   :init (require 'ess-site)
   :config
   ;; There's a bug with flycheck lintr caching

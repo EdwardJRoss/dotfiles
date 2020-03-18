@@ -212,6 +212,11 @@
     (eshell-kill-input)
     (eshell-send-input)))
 
+;; TODO: Make into packages with use-package
+
+(require 'presto)
+(require 'athena)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Evil - Vi Emulation Layer for Emacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

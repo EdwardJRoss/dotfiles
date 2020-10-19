@@ -127,8 +127,9 @@ fi
 
 # export PYTHONSTARTUP=$HOME/config/interactive.py
 # curl -o ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
-if [[ -e /usr/share/git/git-prompt.sh ]]; then
-    source /usr/share/git/git-prompt.sh
+GIT_PROMPT=/usr/lib/git-core/git-sh-prompt
+if [[ -e "$GIT_PROMPT" ]]; then
+    source "$GIT_PROMPT"
     export PS1="$Green[\u@\h]$Purple $Yellow\$(__git_ps1)$Color_Off\n\w $ "
 else
     export PS1="$Green[\u@\h]$Purple$Color_Off\n\w $ "

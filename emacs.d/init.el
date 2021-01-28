@@ -249,6 +249,7 @@
          ("D" . 'kill-buffer)
          ("f" . 'find-file)
          ("w" . 'save-buffer)
+         ("W" . 'rename-file-and-buffer)
          ("b" . 'switch-to-buffer)
          ("B" . 'list-buffers)
          ("q" . 'delete-window)

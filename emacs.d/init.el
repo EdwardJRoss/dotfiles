@@ -919,6 +919,31 @@ Lisp function does not specify a special indentation."
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
 
+
+(defun point-backover-newline (point)
+  "If the previous point is a newline go back one character"
+  (if (= (char-before point) ?\n)
+      (- point 1)
+    point))
+
+
+(defun sql-format (start end)
+  "Formats the selected sql using `sqlformat'"
+  (interactive "r")
+  (shell-command-on-region
+   start
+   ;; Exclude overwriting final newline
+   (point-backover-newline end)
+   "sqlformat -k upper -r -s -"
+   ;; output buffer
+   (current-buffer)
+   ;; replace?
+   t
+   ;; name of the error buffer
+   "*Sqlformat Error Buffer*"
+   ;; show error buffer?
+   t))
+
 ;; Put/save customisations through customize in a separate file
 (defconst custom-file (expand-file-name "custom.el" user-emacs-directory))
 (unless (file-exists-p custom-file)

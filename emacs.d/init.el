@@ -500,6 +500,11 @@
    ("/" . 'swiper)))
 
 (use-package counsel
+  :demand t
+  :bind (:map evil-normal-state-map
+         ("gp" . 'counsel-yank-pop)
+         :map evil-insert-state-map
+         ("C-S-r" . 'counsel-yank-pop))
   :diminish counsel-mode
   :config
   ; Ignore dotfiles by default

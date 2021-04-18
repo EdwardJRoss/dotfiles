@@ -874,6 +874,20 @@ Lisp function does not specify a special indentation."
   )
 
 
+
+(defun er/hugo-save-clipboard-image (name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sFile name: ")
+  (let ((outfile (concat "/images/" name ".png")))
+        (call-process-shell-command
+         (concat "xclip -selection clipboard -t image/png -o >../../static" outfile)
+         "/dev/null"
+         0)
+        (save-excursion
+          (insert (concat "![](" outfile ")")))
+        (forward-char)
+        ))
+
 (defun er/scroll-right (count)
   (interactive "p")
   (right-char (* count (/ (window-width) 2))))

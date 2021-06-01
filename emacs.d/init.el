@@ -758,9 +758,13 @@ Lisp function does not specify a special indentation."
 
 ;;; Version Control - except in Cygwin where it's dog slow
 (if (not (eq system-type 'cygwin))
-    (use-package evil-magit
+    (use-package magit
       :bind (:map er/application-map
-                  ("g" . magit-status))))
+                  ("g" . magit-status))
+      :init
+      ;; Work around: Key sequence C-x M-g starts with non-prefix key C-x ESC
+      ;; https://gitter.im/magit/magit?at=601c19379fa6765ef8f9eb8d
+      (setq magit-define-global-key-bindings nil)))
 
 
 

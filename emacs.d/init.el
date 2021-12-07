@@ -556,13 +556,6 @@
   :config
   (global-company-mode)
 
-  ;; In eshell typing " causes a tab to be inserted and an error
-  ;; https://github.com/company-mode/company-mode/issues/409
-  (defun er/eshell-remove-pcomplete ()
-    (remove-hook 'completion-at-point-functions #'pcomplete-completions-at-point t))
-
-  (add-hook 'eshell-mode-hook #'er/eshell-remove-pcomplete)
-
   ;; Configuration alias
   ;; ... should probably just keep this in the alias file
   (defun er/alias-eshell-config () (eshell/alias "config" "git --git-dir=$HOME/.cfg/ --work-tree=$HOME $*"))

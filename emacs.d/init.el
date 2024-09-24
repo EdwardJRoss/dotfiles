@@ -803,9 +803,6 @@ Lisp function does not specify a special indentation."
                              (setq eshell-path-env path-env)))))))))
   )
 
-(use-package py-autopep8
-  :mode "\\.py\\'")
-
 (use-package ess
   :commands R
   :mode ("\\.R\\'" . R-mode)

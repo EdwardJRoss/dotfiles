@@ -651,12 +651,13 @@
 (use-package dumb-jump
   :bind
   (:map evil-motion-state-map
-        ("C-]" . 'dumb-jump-go)
-        ("C-}" . 'dumb-jump-go-prompt))
+        ("C-}" . 'xref-find-apropos))
   :config
   (setq dumb-jump-selector 'ivy)
   (setq dumb-jump-force-searcher 'rg)
-  ; Disable PCRE2
+  ; Use xref
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  ; Disable PCRE2 as not always available
   (setq dumb-jump-rg-search-args "")
   :ensure)
 

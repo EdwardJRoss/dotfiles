@@ -772,7 +772,7 @@ Lisp function does not specify a special indentation."
 ;; Required packages: jedi importmagic autopep8 yapf flake8 pylint
 ;;                    jupyter ipdb
 (use-package elpy
-  :mode ("\\.py\\'" . python-mode)
+  :init (elpy-enable)
   :config
   ;; Make more consistent with ESS
   (bind-key "C-c C-c" 'er/elpy-shell-send-region-or-statement-and-step elpy-mode-map)

@@ -97,7 +97,6 @@ __update_prompt() {
     local status_mark context jobs
 
     history -a
-    history -n
 
     if (( status != 0 )); then
         status_mark="${Red}!${status}${Color_Off} "

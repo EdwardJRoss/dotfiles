@@ -42,8 +42,6 @@ export PROMPT_COMMAND="history -a"
 if type -a vim > /dev/null 2>&1; then
     alias vi=vim
     alias view='vim -R'
-else
-    echo >&2 "Vim not available on host"
 fi
 
 export VISUAL="vi"

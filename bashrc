@@ -89,36 +89,11 @@ Purple="\[\033[0;35m\]"       # Purple
 Cyan="\[\033[0;36m\]"         # Cyan
 White="\[\033[0;37m\]"        # White
 
-# Mercurial PS1: Need to resove
-#hg_ps1() {
-#        hg prompt "on hg branch {branch}" 2> /dev/null
-#    }
 
-# Python Virtual Environment PS1 need to resolve
-#venv_ps1() {
-#    venv=`basename "$VIRTUAL_ENV"`
-#    if [ -n "$venv" ] ; then
-#        echo "{$venv}"
-#    fi
-#}
-
-# export PS1="$Green[\u@\h]$Purple \$(venv_ps1)$Yellow\$(__git_ps1)\$(hg_ps1)$Color_Off\n\w $ "
 export PS1="$Green[\u@\h]$Color_Off\n\w $ "
-# export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 # Last part is python
 export PATH="$PATH:$HOME/bin:$HOME/.bin:$HOME/.local/bin"
-
-
-# Requires virtualenvwrapper to be installed
-export WORKON_HOME=".virtualenvs"
-export PROJECT_HOME="$HOME/projects"
-for dir_root in /usr "$HOME/.local"; do
-    venv_script="bin/virtualenvwrapper_lazy.sh"
-    if [[ -e "${dir_root}/${venv_script}" ]]; then
-    source "${dir_root}/${venv_script}"
-    fi
-done
 
 
 if [[ -e ~/.localrc ]]; then

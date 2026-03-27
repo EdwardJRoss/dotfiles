@@ -5,34 +5,20 @@
 ################################################################################
 # History
 ################################################################################
-# Make bash append rather than overwrite the history on disk
+# Make bash append rather than overwrite the history on disk.
 shopt -s histappend
 
 # When changing directory small typos can be ignored by bash
 # for example, cd /vr/lgo/apaache would find /var/log/apache
 shopt -s cdspell
 
-# Uncomment to turn on programmable completion enhancements.
-# Any completions you add in ~/.bash_completion are sourced last.
-# [[ -f /etc/bash_completion ]] && . /etc/bash_completion
-
-# History Options
+# History options
 export HISTFILESIZE=20000
 export HISTSIZE=20000
+export HISTCONTROL=ignoredups:erasedups
 
-# Backup history
-
-# Don't put duplicate lines in the history.
-export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
-
-# Ignore some controlling instructions
-# HISTIGNORE is a colon-delimited list of patterns which should be excluded.
-# The '&' is a special pattern which suppresses duplicate entries.
-# export HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
-# export HISTIGNORE=$'[ \t]*:&:[fb]g:exit:ls' # Ignore the ls command as well
-#
-# Whenever displaying the prompt, write the previous line to disk
-export PROMPT_COMMAND="history -a"
+# Write each command to the history file and read in commands from other shells.
+PROMPT_COMMAND='history -a; history -n'
 
 
 ################################################################################

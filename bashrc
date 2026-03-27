@@ -99,15 +99,13 @@ __update_prompt() {
     history -a
     history -n
 
-    if (( status == 0 )); then
-        status_mark="${Green}0${Color_Off}"
-    else
-        status_mark="${Red}!${status}${Color_Off}"
+    if (( status != 0 )); then
+        status_mark="${Red}!${status}${Color_Off} "
     fi
 
     context=$(__prompt_context)
     jobs=$(__prompt_jobs)
-    PS1="${status_mark} ${Green}[\u@\h]${Color_Off}${jobs}${context}$(__prompt_git_ref)\n${Cyan}\w${Color_Off} \$ "
+    PS1="${status_mark}${Green}[\u@\h]${Color_Off}${jobs}${context}$(__prompt_git_ref)\n${Cyan}\w${Color_Off} \$ "
 }
 
 if [[ -e "$HOME/.localrc" ]]; then

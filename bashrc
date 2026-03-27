@@ -107,7 +107,7 @@ __update_prompt() {
 
     context=$(__prompt_context)
     jobs=$(__prompt_jobs)
-    PS1="${status_mark} ${Bold}${Green}[\u@\h]${Color_Off}${jobs}${context}$(__prompt_git_ref)\n${Cyan}\w${Color_Off} \$ "
+    PS1="${status_mark} ${Green}[\u@\h]${Color_Off}${jobs}${context}$(__prompt_git_ref)\n${Cyan}\w${Color_Off} \$ "
 }
 
 if [[ -e "$HOME/.localrc" ]]; then

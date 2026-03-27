@@ -63,6 +63,8 @@ fi
 # Readline
 ################################################################################
 
+set -o vi
+
 if bind -V >/dev/null 2>&1; then
     bind '"\e[A": history-search-backward'
     bind '"\e[B": history-search-forward'

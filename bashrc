@@ -47,34 +47,6 @@ fi
 
 export VISUAL="vi"
 
-alias e="$VISUAL"
-alias py='python'
-
-alias l='ls -CF'                 # classify files in colour
-alias ls='ls -hF --color=tty'                 # classify files in colour
-alias ll='ls --color=auto -Flh'
-alias la='ls -A'                              # all but . and ..
-alias ct='cat -v -T'
-
-alias cl='column -ts"»  " | head'
-alias col='column -ts"» " | less -S'
-alias tl='tail -n+2'
-
-alias 'current-branch'='git rev-parse --abbrev-ref HEAD'
-
-alias info='info --vi-keys'
-
-# Default to human readable figures
-alias df='df -h'
-alias du='du -h'
-#
-# Misc :)
-alias less='less -s -r'                          # raw control characters
-alias where='type -a'                        # where, of a sort
-alias grep='grep --color=auto'                     # show differences in colour
-alias egrep='egrep --color=auto'              # show differences in colour
-alias fgrep='fgrep --color=auto'              # show differences in colour
-
 # /etc/profile sets umask 022, removing write perms to group + others.
 # Set a more restrictive umask: i.e. no exec perms for others:
 umask 027

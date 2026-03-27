@@ -28,6 +28,18 @@ if type -a vim > /dev/null 2>&1; then
 fi
 
 ################################################################################
+# Completion
+################################################################################
+
+if [[ -r /usr/share/bash-completion/bash_completion ]]; then
+    # shellcheck disable=SC1091
+    source /usr/share/bash-completion/bash_completion
+elif [[ -r /etc/bash_completion ]]; then
+    # shellcheck disable=SC1091
+    source /etc/bash_completion
+fi
+
+################################################################################
 # Prompt
 ################################################################################
 

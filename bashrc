@@ -81,9 +81,20 @@ __prompt_context() {
     printf ' %s[%s]%s' "$Cyan" "$context" "$Color_Off"
 }
 
+__prompt_jobs() {
+    local jobs_count=0 _
+
+    while read -r _; do
+        ((jobs_count++))
+    done < <(jobs -p 2>/dev/null)
+
+    ((jobs_count > 0)) || return
+    printf ' %s{%s job%s}%s' "$Yellow" "$jobs_count" "$([[ $jobs_count -eq 1 ]] && printf '' || printf 's')" "$Color_Off"
+}
+
 __update_prompt() {
     local status=$?
-    local status_mark context
+    local status_mark context jobs
 
     history -a
     history -n
@@ -95,7 +106,8 @@ __update_prompt() {
     fi
 
     context=$(__prompt_context)
-    PS1="${status_mark} ${Bold}${Green}[\u@\h]${Color_Off}${context}$(__prompt_git_ref)\n${Cyan}\w${Color_Off} \$ "
+    jobs=$(__prompt_jobs)
+    PS1="${status_mark} ${Bold}${Green}[\u@\h]${Color_Off}${jobs}${context}$(__prompt_git_ref)\n${Cyan}\w${Color_Off} \$ "
 }
 
 if [[ -e "$HOME/.localrc" ]]; then

@@ -13,6 +13,9 @@ shopt -s histappend
 # for example, cd /vr/lgo/apaache would find /var/log/apache
 shopt -s cdspell
 
+# Keep LINES and COLUMNS updated after terminal resizes.
+shopt -s checkwinsize
+
 # History options
 export HISTFILESIZE=20000
 export HISTSIZE=20000

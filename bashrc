@@ -18,10 +18,6 @@ export HISTFILESIZE=20000
 export HISTSIZE=20000
 export HISTCONTROL=ignoredups:erasedups
 
-# Write each command to the history file and read in commands from other shells.
-PROMPT_COMMAND='history -a; history -n'
-
-
 ################################################################################
 # Aliases
 ################################################################################
@@ -31,27 +27,46 @@ if type -a vim > /dev/null 2>&1; then
     alias view='vim -R'
 fi
 
+################################################################################
+# Prompt
+################################################################################
+
 Color_Off="\[\033[0m\]"       # Text Reset
-Black="\[\033[0;30m\]"        # Black
-Red="\[\033[0;31m\]"          # Red
 Green="\[\033[0;32m\]"        # Green
 Yellow="\[\033[0;33m\]"       # Yellow
-Blue="\[\033[0;34m\]"         # Blue
-Purple="\[\033[0;35m\]"       # Purple
-Cyan="\[\033[0;36m\]"         # Cyan
-White="\[\033[0;37m\]"        # White
 
+__prompt_git_dir=
+__prompt_git_branch=
 
-if [[ -e ~/.localrc ]]; then
-    source ~/.localrc
+__update_prompt() {
+    local cwd branch
+
+    history -a
+    history -n
+
+    cwd=$PWD
+    if [[ $cwd != "$__prompt_git_dir" ]]; then
+        __prompt_git_dir=$cwd
+        __prompt_git_branch=
+
+        if command -v git >/dev/null 2>&1 && git -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            branch=$(git -C "$cwd" symbolic-ref --quiet --short HEAD 2>/dev/null)
+            if [[ -z $branch ]]; then
+                branch=$(git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
+            fi
+
+            if [[ -n $branch ]]; then
+                __prompt_git_branch=" ${Yellow}(${branch})${Color_Off}"
+            fi
+        fi
+    fi
+
+    PS1="${Green}[\u@\h]${Color_Off}${__prompt_git_branch}\n\w $ "
+}
+
+if [[ -e "$HOME/.localrc" ]]; then
+    # shellcheck disable=SC1090
+    source "$HOME/.localrc"
 fi
 
-# export PYTHONSTARTUP=$HOME/config/interactive.py
-# curl -o ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
-GIT_PROMPT=/usr/lib/git-core/git-sh-prompt
-if [[ -e "$GIT_PROMPT" ]]; then
-    source "$GIT_PROMPT"
-    export PS1="${Green}[\u@\h]${Purple} ${Yellow}\$(__git_ps1)${Color_Off}\n\w $ "
-else
-    export PS1="${Green}[\u@\h]${Purple}${Color_Off}\n\w $ "
-fi
+PROMPT_COMMAND='__update_prompt'

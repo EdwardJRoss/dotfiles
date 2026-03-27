@@ -31,17 +31,59 @@ fi
 # Prompt
 ################################################################################
 
-Color_Off="\[\033[0m\]"       # Text Reset
-Red="\[\033[0;31m\]"          # Red
-Green="\[\033[0;32m\]"        # Green
-Yellow="\[\033[0;33m\]"       # Yellow
+PROMPT_DIRTRIM=3
 
-__prompt_git_dir=
-__prompt_git_branch=
+Color_Off=
+Red=
+Green=
+Yellow=
+Cyan=
+Bold=
+
+if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
+    if [[ $(tput colors 2>/dev/null || printf 0) -ge 8 ]]; then
+        Color_Off="\[$(tput sgr0)\]"
+        Red="\[$(tput setaf 1)\]"
+        Green="\[$(tput setaf 2)\]"
+        Yellow="\[$(tput setaf 3)\]"
+        Cyan="\[$(tput setaf 6)\]"
+        Bold="\[$(tput bold)\]"
+    fi
+fi
+
+__prompt_git_ref() {
+    local ref
+
+    command -v git >/dev/null 2>&1 || return
+    git -C "$PWD" rev-parse --is-inside-work-tree >/dev/null 2>&1 || return
+
+    ref=$(git -C "$PWD" symbolic-ref --quiet --short HEAD 2>/dev/null)
+    if [[ -z $ref ]]; then
+        ref=$(git -C "$PWD" rev-parse --short HEAD 2>/dev/null)
+    fi
+
+    [[ -n $ref ]] || return
+    printf ' %s(%s)%s' "$Yellow" "$ref" "$Color_Off"
+}
+
+__prompt_context() {
+    local context=
+
+    if [[ -n ${VIRTUAL_ENV-} ]]; then
+        context=${context:+$context,}venv:$(basename "$VIRTUAL_ENV")
+    fi
+
+    if [[ -n ${SSH_CONNECTION-} ]]; then
+        context=${context:+$context,}ssh
+    fi
+
+    [[ -n $context ]] || return
+    printf ' %s[%s]%s' "$Cyan" "$context" "$Color_Off"
+}
 
 __update_prompt() {
     local status=$?
-    local cwd branch status_mark
+    local status_mark context
 
     history -a
     history -n
@@ -52,24 +94,8 @@ __update_prompt() {
         status_mark="${Red}!${status}${Color_Off}"
     fi
 
-    cwd=$PWD
-    if [[ $cwd != "$__prompt_git_dir" ]]; then
-        __prompt_git_dir=$cwd
-        __prompt_git_branch=
-
-        if command -v git >/dev/null 2>&1 && git -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-            branch=$(git -C "$cwd" symbolic-ref --quiet --short HEAD 2>/dev/null)
-            if [[ -z $branch ]]; then
-                branch=$(git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
-            fi
-
-            if [[ -n $branch ]]; then
-                __prompt_git_branch=" ${Yellow}(${branch})${Color_Off}"
-            fi
-        fi
-    fi
-
-    PS1="${status_mark} ${Green}[\u@\h]${Color_Off}${__prompt_git_branch}\n\w $ "
+    context=$(__prompt_context)
+    PS1="${status_mark} ${Bold}${Green}[\u@\h]${Color_Off}${context}$(__prompt_git_ref)\n${Cyan}\w${Color_Off} \$ "
 }
 
 if [[ -e "$HOME/.localrc" ]]; then

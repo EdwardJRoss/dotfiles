@@ -8,4 +8,7 @@ export VISUAL="vi"
 # Set a more restrictive umask: i.e. no exec perms for others:
 umask 027
 
-[[ -f ~/.bashrc ]] && source ~/.bashrc
+if [[ -f "$HOME/.bashrc" ]]; then
+    # shellcheck disable=SC1090
+    source "$HOME/.bashrc"
+fi

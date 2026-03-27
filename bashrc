@@ -32,6 +32,7 @@ fi
 ################################################################################
 
 Color_Off="\[\033[0m\]"       # Text Reset
+Red="\[\033[0;31m\]"          # Red
 Green="\[\033[0;32m\]"        # Green
 Yellow="\[\033[0;33m\]"       # Yellow
 
@@ -39,10 +40,17 @@ __prompt_git_dir=
 __prompt_git_branch=
 
 __update_prompt() {
-    local cwd branch
+    local status=$?
+    local cwd branch status_mark
 
     history -a
     history -n
+
+    if (( status == 0 )); then
+        status_mark="${Green}0${Color_Off}"
+    else
+        status_mark="${Red}!${status}${Color_Off}"
+    fi
 
     cwd=$PWD
     if [[ $cwd != "$__prompt_git_dir" ]]; then
@@ -61,7 +69,7 @@ __update_prompt() {
         fi
     fi
 
-    PS1="${Green}[\u@\h]${Color_Off}${__prompt_git_branch}\n\w $ "
+    PS1="${status_mark} ${Green}[\u@\h]${Color_Off}${__prompt_git_branch}\n\w $ "
 }
 
 if [[ -e "$HOME/.localrc" ]]; then

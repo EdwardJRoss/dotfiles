@@ -1,3 +1,4 @@
+#!/bin/bash
 # If not running interactively, don't do anything
 [[ "$-" != *i* ]] && return
 
@@ -62,10 +63,8 @@ Cyan="\[\033[0;36m\]"         # Cyan
 White="\[\033[0;37m\]"        # White
 
 
-export PS1="$Green[\u@\h]$Color_Off\n\w $ "
-
 # Last part is python
-export PATH="$PATH:$HOME/bin:$HOME/.bin:$HOME/.local/bin"
+export PATH="${PATH}:${HOME}/bin:${HOME}/.bin:${HOME}/.local/bin"
 
 
 if [[ -e ~/.localrc ]]; then
@@ -77,7 +76,7 @@ fi
 GIT_PROMPT=/usr/lib/git-core/git-sh-prompt
 if [[ -e "$GIT_PROMPT" ]]; then
     source "$GIT_PROMPT"
-    export PS1="$Green[\u@\h]$Purple $Yellow\$(__git_ps1)$Color_Off\n\w $ "
+    export PS1="${Green}[\u@\h]${Purple} ${Yellow}\$(__git_ps1)${Color_Off}\n\w $ "
 else
-    export PS1="$Green[\u@\h]$Purple$Color_Off\n\w $ "
+    export PS1="${Green}[\u@\h]${Purple}${Color_Off}\n\w $ "
 fi

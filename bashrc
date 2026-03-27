@@ -30,6 +30,23 @@ if type -a vim > /dev/null 2>&1; then
     alias view='vim -R'
 fi
 
+case "$(uname -s)" in
+    Darwin)
+        alias ls='ls -G'
+        alias ll='ls -lG'
+        alias la='ls -laG'
+        ;;
+    *)
+        alias ls='ls --color=auto'
+        alias ll='ls -lh --color=auto'
+        alias la='ls -lah --color=auto'
+        alias grep='grep --color=auto'
+        ;;
+esac
+
+alias ..='cd ..'
+alias ...='cd ../..'
+
 ################################################################################
 # Completion
 ################################################################################

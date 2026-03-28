@@ -54,6 +54,12 @@
   (define-key er/leader-map (kbd "x") #'execute-extended-command)
   (define-key er/leader-map (kbd "g") #'goto-line))
 
+(use-package icomplete
+  :ensure nil
+  :init
+  (setq icomplete-separator " · ")
+  (fido-vertical-mode 1))
+
 ;; Keep Customize settings separate from hand-written config.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)

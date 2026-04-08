@@ -141,6 +141,23 @@
           "fdfind --color=never --full-path")
          (t nil))))
 
+(use-package which-key
+  :ensure nil
+  :init
+  (setq which-key-idle-delay 0.4
+        which-key-idle-secondary-delay 0.05
+        which-key-popup-type 'side-window
+        which-key-side-window-location 'bottom
+        which-key-side-window-max-height 0.25
+        which-key-max-description-length 40)
+  :config
+  (which-key-mode 1)
+  (which-key-add-key-based-replacements
+    "SPC" "leader"
+    "SPC a" "apps"
+    "SPC c" "code"
+    "SPC z" "zoom"))
+
 (use-package eglot
   :ensure nil
   :hook ((python-mode . eglot-ensure)

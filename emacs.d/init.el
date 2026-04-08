@@ -75,7 +75,8 @@
   (define-key er/leader-map (kbd "u") #'undo)
   (define-key er/leader-map (kbd ":") #'execute-extended-command)
   (define-key er/leader-map (kbd "x") #'execute-extended-command)
-  (define-key er/leader-map (kbd "g") #'consult-ripgrep)
+  (define-key er/leader-map (kbd "g") #'magit-status)
+  (define-key er/leader-map (kbd "?") #'consult-ripgrep)
   (define-key er/leader-map (kbd "i") #'consult-imenu)
   (define-key er/leader-map (kbd "p") #'project-switch-project)
   (define-key er/leader-map (kbd ",") #'recentf-open-files)
@@ -100,11 +101,19 @@
     "Personal application launcher keymap.")
   (define-key er/leader-map (kbd "a") er/app-map)
   (define-key evil-normal-state-map (kbd "-") er/app-map)
+  (define-key er/app-map (kbd "g") #'magit-status)
   (define-key er/app-map (kbd "s") #'eshell)
   (define-key er/app-map (kbd "S") #'shell)
   (define-key er/app-map (kbd "t") #'eat)
   (define-key er/app-map (kbd "T") #'term)
   (define-key er/app-map (kbd "d") #'dired))
+
+(use-package evil-collection
+  :after evil
+  :init
+  (setq evil-collection-magit-use-z-for-folds t)
+  :config
+  (evil-collection-init '(magit)))
 
 (use-package savehist
   :ensure nil
@@ -155,6 +164,11 @@
          ((executable-find "fdfind")
           "fdfind --color=never --full-path")
          (t nil))))
+
+(use-package magit
+  :commands (magit-status magit-blame-addition)
+  :config
+  (define-key er/code-map (kbd "b") #'magit-blame-addition))
 
 (use-package eat
   :init

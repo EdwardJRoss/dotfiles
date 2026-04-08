@@ -22,6 +22,17 @@
       version-control t
       create-lockfiles nil)
 
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
+
+(dolist (mode '(term-mode-hook
+                eshell-mode-hook
+                shell-mode-hook
+                eat-mode-hook
+                dired-mode-hook
+                magit-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
 (require 'package)
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")

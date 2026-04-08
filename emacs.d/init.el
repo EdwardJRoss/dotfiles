@@ -8,6 +8,20 @@
 (setq inhibit-startup-message t
       initial-scratch-message "")
 
+;; Keep backup and autosave files out of project directories.
+(dolist (dir '("backups/" "auto-save/"))
+  (make-directory (expand-file-name dir user-emacs-directory) t))
+
+(setq backup-directory-alist `(("." . ,(expand-file-name "backups/" user-emacs-directory)))
+      auto-save-file-name-transforms `((".*" ,(expand-file-name "auto-save/" user-emacs-directory) t))
+      auto-save-default t
+      make-backup-files t
+      delete-old-versions t
+      kept-new-versions 10
+      kept-old-versions 3
+      version-control t
+      create-lockfiles nil)
+
 (require 'package)
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")

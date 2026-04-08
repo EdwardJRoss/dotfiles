@@ -88,7 +88,8 @@
   (define-key evil-normal-state-map (kbd "-") er/app-map)
   (define-key er/app-map (kbd "s") #'eshell)
   (define-key er/app-map (kbd "S") #'shell)
-  (define-key er/app-map (kbd "t") #'term)
+  (define-key er/app-map (kbd "t") #'eat)
+  (define-key er/app-map (kbd "T") #'term)
   (define-key er/app-map (kbd "d") #'dired))
 
 (use-package savehist
@@ -140,6 +141,11 @@
          ((executable-find "fdfind")
           "fdfind --color=never --full-path")
          (t nil))))
+
+(use-package eat
+  :init
+  (eat-eshell-mode 1)
+  :commands (eat eat-other-window))
 
 (use-package which-key
   :ensure nil

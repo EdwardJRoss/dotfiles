@@ -31,6 +31,8 @@
     "Personal leader keymap.")
   (define-key evil-normal-state-map (kbd "SPC") er/leader-map)
   (define-key evil-motion-state-map (kbd "SPC") er/leader-map)
+  (define-key evil-normal-state-map (kbd "g]") #'xref-find-definitions)
+  (define-key evil-normal-state-map (kbd "g[") #'xref-go-back)
 
   ;; Window management, mirroring the C-w prefix.
   (define-key er/leader-map (kbd "h") #'evil-window-left)
@@ -58,6 +60,11 @@
   (define-key er/leader-map (kbd "p") #'project-switch-project)
   (define-key er/leader-map (kbd "r") #'recentf-open-files)
   (define-key er/leader-map (kbd "y") #'consult-yank-pop)
+
+  ;; Code actions and language tooling.
+  (defvar er/code-map (make-sparse-keymap)
+    "Personal code action keymap.")
+  (define-key er/leader-map (kbd "c") er/code-map)
 
   ;; Application launcher prefix. Keep "-" as a compatibility alias
   ;; while migrating toward the leader-based binding.
@@ -95,6 +102,13 @@
   (completion-category-overrides
    '((file (styles basic partial-completion)))))
 
+(use-package corfu
+  :init
+  (global-corfu-mode 1)
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t))
+
 (use-package marginalia
   :init
   (marginalia-mode 1))
@@ -112,6 +126,31 @@
          ((executable-find "fdfind")
           "fdfind --color=never --full-path")
          (t nil))))
+
+(use-package eglot
+  :ensure nil
+  :hook ((python-mode . eglot-ensure)
+         (rust-mode . eglot-ensure)
+         (go-mode . eglot-ensure)
+         (c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (js-mode . eglot-ensure)
+         (js-ts-mode . eglot-ensure)
+         (typescript-mode . eglot-ensure)
+         (typescript-ts-mode . eglot-ensure)
+         (sh-mode . eglot-ensure)
+         (bash-ts-mode . eglot-ensure))
+  :config
+  (setq eglot-autoshutdown t)
+
+  (define-key er/code-map (kbd "a") #'eglot-code-actions)
+  (define-key er/code-map (kbd "f") #'eglot-format)
+  (define-key er/code-map (kbd "r") #'eglot-rename)
+  (define-key er/code-map (kbd "d") #'xref-find-definitions)
+  (define-key er/code-map (kbd "n") #'flymake-goto-next-error)
+  (define-key er/code-map (kbd "p") #'flymake-goto-prev-error)
+  (define-key er/code-map (kbd "e") #'consult-flymake)
+  (define-key er/code-map (kbd "h") #'xref-find-references))
 
 ;; Keep Customize settings separate from hand-written config.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

@@ -72,6 +72,14 @@
     "Personal code action keymap.")
   (define-key er/leader-map (kbd "c") er/code-map)
 
+  ;; Text scaling commands.
+  (defvar er/zoom-map (make-sparse-keymap)
+    "Personal text scaling keymap.")
+  (define-key er/leader-map (kbd "z") er/zoom-map)
+  (define-key er/zoom-map (kbd "+") #'text-scale-increase)
+  (define-key er/zoom-map (kbd "-") #'text-scale-decrease)
+  (define-key er/zoom-map (kbd "0") #'text-scale-adjust)
+
   ;; Application launcher prefix. Keep "-" as a compatibility alias
   ;; while migrating toward the leader-based binding.
   (defvar er/app-map (make-sparse-keymap)

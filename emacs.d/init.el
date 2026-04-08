@@ -52,7 +52,7 @@
 
   ;; Common actions.
   (define-key er/leader-map (kbd "q") #'delete-window)
-  (define-key er/leader-map (kbd "d") #'kill-this-buffer)
+  (define-key er/leader-map (kbd "d") #'kill-current-buffer)
   (define-key er/leader-map (kbd "b") #'consult-buffer)
   (define-key er/leader-map (kbd "f") #'find-file)
   (define-key er/leader-map (kbd "F") #'consult-fd)

@@ -113,7 +113,7 @@
   :init
   (setq evil-collection-magit-use-z-for-folds t)
   :config
-  (evil-collection-init '(magit)))
+  (evil-collection-init '(magit dired)))
 
 (use-package savehist
   :ensure nil

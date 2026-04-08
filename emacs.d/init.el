@@ -43,6 +43,11 @@
   (define-key er/leader-map (kbd "s") #'evil-window-split)
   (define-key er/leader-map (kbd "v") #'evil-window-vsplit)
   (define-key er/leader-map (kbd "r") #'evil-window-rotate-downwards)
+  (define-key er/leader-map (kbd "R") #'evil-window-rotate-upwards)
+  (define-key er/leader-map (kbd "+") #'evil-window-increase-height)
+  (define-key er/leader-map (kbd "-") #'evil-window-decrease-height)
+  (define-key er/leader-map (kbd "=") #'balance-windows)
+  (define-key er/leader-map (kbd "_") #'evil-window-set-height)
   (define-key er/leader-map (kbd "o") #'delete-other-windows)
 
   ;; Common actions.
@@ -59,7 +64,7 @@
   (define-key er/leader-map (kbd "g") #'consult-ripgrep)
   (define-key er/leader-map (kbd "i") #'consult-imenu)
   (define-key er/leader-map (kbd "p") #'project-switch-project)
-  (define-key er/leader-map (kbd "r") #'recentf-open-files)
+  (define-key er/leader-map (kbd ",") #'recentf-open-files)
   (define-key er/leader-map (kbd "y") #'consult-yank-pop)
 
   ;; Code actions and language tooling.

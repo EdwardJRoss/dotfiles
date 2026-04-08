@@ -45,20 +45,62 @@
   ;; Common actions.
   (define-key er/leader-map (kbd "q") #'delete-window)
   (define-key er/leader-map (kbd "d") #'kill-this-buffer)
-  (define-key er/leader-map (kbd "b") #'switch-to-buffer)
+  (define-key er/leader-map (kbd "b") #'consult-buffer)
   (define-key er/leader-map (kbd "f") #'find-file)
-  (define-key er/leader-map (kbd "/") #'isearch-forward)
+  (define-key er/leader-map (kbd "F") #'consult-fd)
+  (define-key er/leader-map (kbd "/") #'consult-line)
   (define-key er/leader-map (kbd "w") #'save-buffer)
   (define-key er/leader-map (kbd "u") #'undo)
   (define-key er/leader-map (kbd ":") #'execute-extended-command)
   (define-key er/leader-map (kbd "x") #'execute-extended-command)
-  (define-key er/leader-map (kbd "g") #'goto-line))
+  (define-key er/leader-map (kbd "g") #'consult-ripgrep)
+  (define-key er/leader-map (kbd "i") #'consult-imenu)
+  (define-key er/leader-map (kbd "p") #'project-switch-project)
+  (define-key er/leader-map (kbd "r") #'recentf-open-files)
+  (define-key er/leader-map (kbd "y") #'consult-yank-pop))
 
-(use-package icomplete
+(use-package savehist
   :ensure nil
   :init
-  (setq icomplete-separator " · ")
-  (fido-vertical-mode 1))
+  (savehist-mode 1))
+
+(use-package recentf
+  :ensure nil
+  :init
+  (setq recentf-max-saved-items 500
+        recentf-auto-cleanup 'never)
+  (recentf-mode 1))
+
+(use-package project
+  :ensure nil)
+
+(use-package vertico
+  :init
+  (vertico-mode 1))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides
+   '((file (styles basic partial-completion)))))
+
+(use-package marginalia
+  :init
+  (marginalia-mode 1))
+
+(use-package consult
+  :bind (("C-x b" . consult-buffer)
+         ("C-x C-r" . recentf-open-files)
+         ("M-s l" . consult-line)
+         ("M-y" . consult-yank-pop))
+  :config
+  (setq consult-fd-args
+        (cond
+         ((executable-find "fd")
+          "fd --color=never --full-path")
+         ((executable-find "fdfind")
+          "fdfind --color=never --full-path")
+         (t nil))))
 
 ;; Keep Customize settings separate from hand-written config.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

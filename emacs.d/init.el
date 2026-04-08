@@ -22,7 +22,8 @@
 (use-package evil
   :init
   (setq evil-want-integration t
-        evil-want-keybinding nil)
+        evil-want-keybinding nil
+        evil-symbol-word-search t)
   :config
   (evil-mode 1)
 

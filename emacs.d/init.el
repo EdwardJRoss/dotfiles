@@ -57,7 +57,18 @@
   (define-key er/leader-map (kbd "i") #'consult-imenu)
   (define-key er/leader-map (kbd "p") #'project-switch-project)
   (define-key er/leader-map (kbd "r") #'recentf-open-files)
-  (define-key er/leader-map (kbd "y") #'consult-yank-pop))
+  (define-key er/leader-map (kbd "y") #'consult-yank-pop)
+
+  ;; Application launcher prefix. Keep "-" as a compatibility alias
+  ;; while migrating toward the leader-based binding.
+  (defvar er/app-map (make-sparse-keymap)
+    "Personal application launcher keymap.")
+  (define-key er/leader-map (kbd "a") er/app-map)
+  (define-key evil-normal-state-map (kbd "-") er/app-map)
+  (define-key er/app-map (kbd "s") #'eshell)
+  (define-key er/app-map (kbd "S") #'shell)
+  (define-key er/app-map (kbd "t") #'term)
+  (define-key er/app-map (kbd "d") #'dired))
 
 (use-package savehist
   :ensure nil

@@ -1,0 +1,15 @@
+# Emacs package installs and caches
+emacs.d/elpa/
+emacs.d/eln-cache/
+
+# Emacs generated state
+emacs.d/auto-save-list/
+emacs.d/eshell/
+emacs.d/history
+emacs.d/recentf
+emacs.d/custom.el
+
+# Emacs backups and lockfiles
+emacs.d/*~
+emacs.d/#*#
+emacs.d/.#*

@@ -63,7 +63,11 @@ fi
 # Readline
 ################################################################################
 
-set -o vi
+if [[ -n ${EAT_SHELL_INTEGRATION_DIR-} ]]; then
+    set -o emacs
+else
+    set -o vi
+fi
 
 if bind -V >/dev/null 2>&1; then
     bind '"\e[A": history-search-backward'

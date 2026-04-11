@@ -156,7 +156,12 @@
   (global-corfu-mode 1)
   :custom
   (corfu-auto t)
-  (corfu-cycle t))
+  (corfu-cycle t)
+  :config
+  (defun er/disable-corfu ()
+    (corfu-mode -1))
+  (add-hook 'git-commit-mode-hook #'er/disable-corfu)
+  (add-hook 'magit-mode-hook #'er/disable-corfu))
 
 (use-package marginalia
   :init

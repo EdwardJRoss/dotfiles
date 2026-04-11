@@ -184,6 +184,24 @@
 (use-package eat
   :init
   (eat-eshell-mode 1)
+  :config
+  (with-eval-after-load 'evil
+    ;; In Eat buffers, terminal output is read-only text.  Evil's normal-state
+    ;; paste commands try to edit the buffer directly, so route them through
+    ;; Eat's yank commands instead.
+    (evil-define-key 'normal eat-mode-map
+      (kbd "p") #'eat-yank
+      (kbd "P") #'eat-yank
+      (kbd "gp") #'eat-yank
+      (kbd "gP") #'eat-yank
+      (kbd "C-y") #'eat-yank
+      (kbd "M-y") #'eat-yank-from-kill-ring)
+    ;; Evil uses `C-d' in insert state, but in a terminal buffer this should
+    ;; go to the running program.
+    (evil-define-key 'insert eat-mode-map
+      (kbd "C-d") #'eat-self-input
+      (kbd "C-y") #'eat-yank
+      (kbd "M-y") #'eat-yank-from-kill-ring))
   :commands (eat eat-other-window))
 
 (use-package which-key

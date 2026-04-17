@@ -93,10 +93,16 @@
   (define-key er/leader-map (kbd ",") #'recentf-open-files)
   (define-key er/leader-map (kbd "y") #'consult-yank-pop)
 
-  ;; Code actions and language tooling.
-  (defvar er/code-map (make-sparse-keymap)
-    "Personal code action keymap.")
-  (define-key er/leader-map (kbd "c") er/code-map)
+  ;; Mode and code actions.
+  (defvar er/mode-map (make-sparse-keymap)
+    "Personal mode and code action keymap.")
+  (define-key er/leader-map (kbd "m") er/mode-map)
+  (define-key er/mode-map (kbd "b") #'magit-blame-addition)
+  (define-key er/mode-map (kbd "d") #'xref-find-definitions)
+  (define-key er/mode-map (kbd "e") #'consult-flymake)
+  (define-key er/mode-map (kbd "h") #'xref-find-references)
+  (define-key er/mode-map (kbd "n") #'flymake-goto-next-error)
+  (define-key er/mode-map (kbd "p") #'flymake-goto-prev-error)
 
   ;; Text scaling commands.
   (defvar er/zoom-map (make-sparse-keymap)
@@ -194,7 +200,7 @@
 (use-package magit
   :commands (magit-status magit-blame-addition)
   :config
-  (define-key er/code-map (kbd "b") #'magit-blame-addition))
+  (define-key er/app-map (kbd "g") #'magit-status))
 
 (use-package ledger-mode
   :mode ("\\.journal\\'" "\\.hledger\\'" "\\.ledger\\'")
@@ -251,7 +257,7 @@
     "SPC" "leader"
     "SPC SPC" "god"
     "SPC a" "apps"
-    "SPC c" "code"
+    "SPC m" "mode"
     "SPC z" "zoom"))
 
 (use-package eglot
@@ -270,14 +276,9 @@
   :config
   (setq eglot-autoshutdown t)
 
-  (define-key er/code-map (kbd "a") #'eglot-code-actions)
-  (define-key er/code-map (kbd "f") #'eglot-format)
-  (define-key er/code-map (kbd "r") #'eglot-rename)
-  (define-key er/code-map (kbd "d") #'xref-find-definitions)
-  (define-key er/code-map (kbd "n") #'flymake-goto-next-error)
-  (define-key er/code-map (kbd "p") #'flymake-goto-prev-error)
-  (define-key er/code-map (kbd "e") #'consult-flymake)
-  (define-key er/code-map (kbd "h") #'xref-find-references))
+  (define-key er/mode-map (kbd "a") #'eglot-code-actions)
+  (define-key er/mode-map (kbd "f") #'eglot-format)
+  (define-key er/mode-map (kbd "r") #'eglot-rename))
 
 ;; Keep Customize settings separate from hand-written config.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

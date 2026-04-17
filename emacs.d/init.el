@@ -127,10 +127,47 @@
 
 (use-package god-mode)
 
+(defvar er/leader-C-c-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map [t] #'er/leader-C-c-dispatch)
+    map)
+  "Transient map for dispatching `SPC c` as a `C-c` prefix.")
+
+(defvar er/leader-C-c-prefix "C-c"
+  "Accumulated key sequence for `SPC c` dispatch.")
+
+(defun er/leader-C-c-dispatch ()
+  "Dispatch the next key as part of a `C-c` sequence."
+  (interactive)
+  (setq er/leader-C-c-prefix
+        (god-key-string-after-consuming-key
+         (god-mode-sanitized-key-string last-command-event)
+         er/leader-C-c-prefix))
+  (let ((binding (key-binding (read-kbd-macro er/leader-C-c-prefix t) t)))
+    (cond
+     ((keymapp binding)
+      (set-transient-map er/leader-C-c-map t)
+      (message "%s" (key-description er/leader-C-c-prefix)))
+     ((commandp binding t)
+      (setq this-command binding)
+      (call-interactively binding))
+     (binding
+      (execute-kbd-macro binding))
+     (t
+      (message "%s is undefined" (key-description er/leader-C-c-prefix))))))
+
+(defun er/leader-C-c ()
+  "Start a transient `C-c` key sequence."
+  (interactive)
+  (setq er/leader-C-c-prefix "C-c")
+  (set-transient-map er/leader-C-c-map t)
+  (message "C-c"))
+
 (use-package evil-god-state
   :after (evil god-mode)
   :config
   (evil-define-key '(normal motion) 'global
+    (kbd "SPC c") #'er/leader-C-c
     (kbd "SPC SPC") #'evil-execute-in-god-state)
   (evil-define-key 'god 'global
     (kbd "<escape>") #'evil-god-state-bail))
@@ -257,6 +294,7 @@
     "SPC" "leader"
     "SPC SPC" "god"
     "SPC a" "apps"
+    "SPC c" "C-c"
     "SPC m" "mode"
     "SPC z" "zoom"))
 

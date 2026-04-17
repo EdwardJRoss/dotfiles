@@ -186,6 +186,23 @@
   :config
   (define-key er/code-map (kbd "b") #'magit-blame-addition))
 
+(use-package ledger-mode
+  :mode ("\\.journal\\'" "\\.hledger\\'" "\\.ledger\\'")
+  :custom
+  (ledger-binary-path (expand-file-name "~/.bin/ledger-mode-hledger"))
+  (ledger-mode-should-check-version nil)
+  (ledger-report-auto-width nil)
+  (ledger-report-links-in-register nil)
+  (ledger-report-native-highlighting-arguments '("--color=always"))
+  (ledger-default-date-string "%Y-%m-%d"))
+
+(use-package flymake-hledger
+  :after (ledger-mode flymake)
+  :hook (ledger-mode . flymake-hledger-enable)
+  :custom
+  (flymake-hledger-command '("hledger"))
+  (flymake-hledger-checks '("accounts" "commodities" "balanced" "ordereddates")))
+
 (use-package eat
   :init
   (eat-eshell-mode 1)

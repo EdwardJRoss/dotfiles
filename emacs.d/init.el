@@ -119,6 +119,16 @@
   (define-key er/app-map (kbd "T") #'term)
   (define-key er/app-map (kbd "d") #'dired))
 
+(use-package god-mode)
+
+(use-package evil-god-state
+  :after (evil god-mode)
+  :config
+  (evil-define-key '(normal motion) 'global
+    (kbd "SPC SPC") #'evil-execute-in-god-state)
+  (evil-define-key 'god 'global
+    (kbd "<escape>") #'evil-god-state-bail))
+
 (use-package evil-collection
   :after evil
   :init
@@ -239,6 +249,7 @@
   (which-key-mode 1)
   (which-key-add-key-based-replacements
     "SPC" "leader"
+    "SPC SPC" "god"
     "SPC a" "apps"
     "SPC c" "code"
     "SPC z" "zoom"))

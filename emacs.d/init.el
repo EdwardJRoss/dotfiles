@@ -244,6 +244,12 @@
 
 (use-package ledger-mode
   :mode ("\\.journal\\'" "\\.hledger\\'" "\\.ledger\\'")
+  :config
+  (defun er/ledger-clear-and-next-uncleared ()
+    (interactive)
+    (ledger-toggle-current-transaction 'cleared)
+    (ledger-navigate-next-uncleared))
+  (define-key ledger-mode-map (kbd "C-c C-x") #'er/ledger-clear-and-next-uncleared)
   :custom
   (ledger-binary-path (expand-file-name "~/.bin/ledger-mode-hledger"))
   (ledger-mode-should-check-version nil)

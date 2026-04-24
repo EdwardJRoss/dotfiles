@@ -194,6 +194,9 @@
 (use-package project
   :ensure nil)
 
+(use-package hledger-rules-mode
+  :load-path "hledger")
+
 (use-package vertico
   :init
   (vertico-mode 1))

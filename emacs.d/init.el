@@ -48,7 +48,8 @@
   :init
   (setq evil-want-integration t
         evil-want-keybinding nil
-        evil-symbol-word-search t)
+        evil-symbol-word-search t
+        evil-undo-system 'undo-redo)
   :config
   (evil-mode 1)
 
@@ -83,7 +84,7 @@
   (define-key er/leader-map (kbd "F") #'consult-fd)
   (define-key er/leader-map (kbd "/") #'consult-line)
   (define-key er/leader-map (kbd "w") #'save-buffer)
-  (define-key er/leader-map (kbd "u") #'undo)
+  (define-key er/leader-map (kbd "u") #'evil-undo)
   (define-key er/leader-map (kbd ":") #'execute-extended-command)
   (define-key er/leader-map (kbd "x") #'execute-extended-command)
   (define-key er/leader-map (kbd "g") #'magit-status)
